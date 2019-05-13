@@ -1,0 +1,281 @@
+syntax = "proto3";
+package platformserver;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.platformserver.proto.platformserver";
+option java_outer_classname = "ServerUserServiceProto";
+import "ServerCommonMessage.proto";
+import public "google/protobuf/timestamp.proto";
+
+service ServerUserService {
+    //保存用户
+    rpc save(SaveRequest) returns(Response);
+    //更新用户
+    rpc update(UpdateRequest)returns(Response);
+    //删除用户
+    rpc delete(DeleteRequest)returns(Response);
+    //根据用户ID查询用户
+    rpc findOne(FindOneUserRequest)returns(Response);
+    //重置密码
+    rpc resetPassword(ResetPasswordRequest)returns(Response);
+    //  根据角色名和用户名模糊查询用户列表  lb
+    rpc listUserByCondition (RequestUserListByCondition) returns (ResponseUserListByCondition) {}
+    //查询平台列表
+    rpc searchPlatFormUser(PlatformUserSearchRequest)returns(Response);
+    //查询客户列表
+    rpc searchCustomerUser(CustomerUserSearchRequest)returns(Response);
+
+
+    //  运营经理,销售经理的关联查询(查询他的客户数,学校数,班级数,学生数)
+    //  目前的需求是只查运营经理的,roleName传"运营"
+    rpc listRoleUserData (RequestUserListByCondition) returns (ResponseRoleUserData) {}
+
+    //  查询某个运营经理的相关信息,他负责的学校,教师数,班级数,学生数
+    rpc listOperationManagerData (RequestId) returns (ResponseSchoolListByOperationManagerId) {}
+}
+
+///////////////////////////////request message////////////////////////////////////
+
+message RequestId {
+    string id = 1;
+}
+
+message ResponseSchoolListByOperationManagerId{
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //学校信息
+    repeated SchoolInfo schoolInfo = 3;
+}
+//学校信息
+message SchoolInfo{
+    //学校id
+    int64 id = 1;
+    //学校名称
+    string name = 2 ;
+    //客户类型
+    int32 customerType = 3 ;
+
+    int32    teacherNum = 4;      //  教师数
+    int32    classNum = 5;       //  班级数
+    int32    studentNum = 6;     //  学生数
+    //所属客户信息
+    repeated CustomerInfo CustomerInfo = 7;
+
+}
+//所属客户信息
+message CustomerInfo{
+    //所属客户id
+    int64 superiorId = 1;
+    //所属客户名称
+    string superiorName = 2;
+    //所属客户类型 1伟东公司 2学校 3教育集团 4教育局
+    int32 customerType = 3;
+}
+
+
+//  -----------start----------------------------------------------
+message ResponseRoleUserData {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+
+    repeated RoleDataVo datas = 7;
+}
+message RoleDataVo {
+    string   userId = 1;
+    string   userName = 2;
+    int32    customerNum = 3;    //  客户数
+    int32    schoolNum = 4;      //  学校数
+    int32    classNum = 5;       //  班级数
+    int32    studentNum = 6;     //  学生数
+}
+//  根据角色名和用户名模糊查询用户列表,根据用户id查询用户信息-----------start----------------------------------------------
+message ResponseUserListByCondition {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+
+    repeated UserVo datas = 7;
+}
+
+message UserVo {
+    string   userId = 1;
+    string   userName = 2;
+    string   userMobile = 3;
+}
+
+//  条件查询用户,所有字段都是可以不传,不传pageSize默认10
+message RequestUserListByCondition {
+    int32 pageNo = 1;        //  页码   从1开始
+    int32 pageSize = 2;      //  每页大小
+    string roleName = 3;     //  角色名
+    string name = 4;         //  用户名
+    int32  roleType = 5;     //  角色类型1:平台角色 2:客户角色 3:用户角色
+}
+
+message RequestUserById {
+    string userId = 1;
+}
+message ResponseUserById {
+    string   code = 1;
+    string   msg = 2;
+    UserVo   userVo = 3;
+}
+
+//  根据角色名和用户名模糊查询用户列表,根据用户id查询用户信息-----------end--------------------------------------------
+message PlatformUserSearchRequest{
+    int32  roleId = 1;
+    string  content = 2;
+    int32 pageNo = 3;        //  页码   从1开始
+    int32 pageSize = 4;      //  每页大小
+}
+
+message PlatformUserSearchResult{
+    message User{
+        string id = 1;
+        string username = 2;
+        string mobile = 3;
+        int32 status = 4;
+        google.protobuf.Timestamp createTime = 5;
+        repeated string roleName = 6;
+    }
+    int64 total = 1;    //  总数量
+    int32 pages = 2;    //  总页数
+    int32 pageNo = 3;   //  页码
+    int32 pageSize = 4; //  每页大小
+    repeated User user = 5;
+}
+
+//保存用户请求
+message SaveRequest{
+    //姓名 必传
+    string username = 1;
+    //必传  电话号码
+    string mobile = 2;
+    //新增平台用户可传可不传  新增客户用户必传  默认 伟东公司  1
+    int64 customerId = 3;
+    //新增平台用户可传可不传  新增客户用户必传
+    int32 customerType = 4;
+    //必传  平台用户传1，客户用户传2，用户传3
+    int32 userType = 5;
+    //必传  启用传1  禁用传2
+    int32 status = 6;
+    //角色ID 必传
+    repeated int32 roleId = 7;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//更新用户请求
+message UpdateRequest{
+    //用户ID  必传
+    string id = 1;
+    //用户名 必传
+    string username = 2;
+    //电话 必传
+    string mobile = 3;
+    //客户ID
+    int64 customerId = 4;
+    //客户类型人
+    int32 customerType = 5;
+    //账号状态
+    int32 status = 6;
+    //角色ID 必传
+    repeated int32 roleId = 7;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//删除用户请求
+message DeleteRequest{
+    string id = 1;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//用户重置密码请求
+message ResetPasswordRequest{
+    string id =1;
+    string password = 2;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//用户请求
+message FindOneUserRequest{
+    string id = 1;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//用户重置密码请求
+message FindOneUserResult{
+    //用户ID  必传
+    string id = 1;
+    //用户名 必传
+    string username = 2;
+    //性别  可不传
+    int32 sex = 3;
+    //年龄 可不传
+    int32 age = 4;
+    //电话 必传
+    string mobile = 5;
+    //账号状态
+    int32 status = 6;
+    //客户ID
+    int64 customerId = 7;
+    //用户图像  可不传
+    string userPortrait = 8;
+
+    message Role{
+        int32 id = 1;
+        string name = 2;
+    }
+    repeated Role role = 9;
+}
+
+message CustomerUserSearchRequest{
+    int32  roleId = 1;
+    int64 customerId = 2;
+    string  content = 3;
+    int32 pageNo = 4;        //  页码   从1开始
+    int32 pageSize = 5;      //  每页大小
+}
+
+
+message CustomerDetailMsg{
+    //客户id
+    int64 customerId = 1;
+    //客户名称
+    string customerName = 2;
+    //客户类型
+    int32 customerType = 3;
+    //数量
+    int32 num = 4;
+}
+
+message CustomerUserSearchResult{
+    message User{
+        string id = 1;
+        string username = 2;
+        string mobile = 3;
+        string customerName = 4;
+        int32 status = 5;
+        google.protobuf.Timestamp createTime = 6;
+        repeated string roleName = 7;
+        repeated CustomerDetailMsg pcustomerInfo = 8;
+    }
+    int64 total = 1;    //  总数量
+    int32 pages = 2;    //  总页数
+    int32 pageNo = 3;   //  页码
+    int32 pageSize = 4; //  每页大小
+    repeated User user = 5;
+}

@@ -1,0 +1,3 @@
+"Method","Name","# requests","# failures","Median response time","Average response time","Min response time","Max response time","Average Content Size","Requests/s"
+"grpc","listSchoolingLength",2,2,310,311,306,316,0,0.35
+"None","Total",2,2,310,311,306,316,0,0.35

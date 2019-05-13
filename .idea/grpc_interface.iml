@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/customercenter/CCCustomerListService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platformserver/ServerCommonMessage" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platformserver/ServerCommonService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platformserver/ServerPrivilegeService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platformserver/ServerRoleService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platformserver/ServerUserService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/customercenter/CCCustomerAnalysisService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/basicmanagement/BMManagerService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/customercenter/CCCommonMessage" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/basicmanagement/BMCommonMessage" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/basicmanagement/BMSubjectService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/BMCommonMessage" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/BMManagerService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/BMSubjectService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/CCCommonMessage" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/CCCustomerAnalysisService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/CCCustomerListService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/ServerCommonMessage" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/ServerCommonService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/ServerPrivilegeService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/ServerRoleService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loadTest/proto/ServerUserService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resoucecenter/RCEditionService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resoucecenter/RCSubjectService" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resourcecenterstatistic/RSstatistic" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.7" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Bundled Protobuf Distribution" level="application" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
+  </component>
+</module>

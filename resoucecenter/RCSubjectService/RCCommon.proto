@@ -1,0 +1,50 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.common"; //所在包名
+option java_outer_classname = "RCCommonProto"; //最外层类名称
+
+import "google/protobuf/any.proto";
+
+message EmptyResp {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+}
+
+message SingleResp {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //结果数据
+    google.protobuf.Any data = 3;
+}
+
+message ListResp {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //结果数据
+    repeated google.protobuf.Any datas = 3;
+}
+
+message PageResp {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //当前页
+    int32 pageNo = 3;
+    //每页数量
+    int32 pageSize = 4;
+    //总页数
+    int32 pages = 5;
+    //总记录数
+    int64 total = 6;
+    //结果数据
+    repeated google.protobuf.Any datas = 7;
+}

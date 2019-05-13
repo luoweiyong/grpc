@@ -1,0 +1,50 @@
+syntax = "proto3";
+package platformserver;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.platformserver.proto.platformserver";
+option java_outer_classname = "ServerCommonMessageProto";
+// 引入外部的proto对象
+import "google/protobuf/any.proto";
+
+//分页封装数据
+message ServerBatchDataPage {
+    /** 当前页 */
+    int32 page = 1;
+    /** 分页数 */
+    int32 pagesize = 2;
+    /** 开始行*/
+    int32 offset = 3;
+    /**总记录数*/
+    float totalRecords = 4;
+    /** 具体数据 */
+    google.protobuf.Any rows = 5; // 任何对象
+}
+
+//分页请求数据
+message ServerDataPageRequestParam {
+    /** 当前页 */
+    int32 page = 1;
+    /** 分页数 */
+    int32 pagesize = 2;
+}
+
+///////////////////////////////response message////////////////////////////////////
+//响应
+message Response{
+    //状态码
+    string code = 1;
+    //返回提示信息
+    string msg = 2;
+    //返回的业务数据
+    google.protobuf.Any datas = 3;
+}
+
+//更新删除结果数返回值
+message CountResult{
+    int32 count = 1;
+}
+
+//异常信息值
+message ExceptionResult{
+    string exMsg = 1;
+}

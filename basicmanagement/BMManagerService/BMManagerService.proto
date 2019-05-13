@@ -1,0 +1,93 @@
+syntax = "proto3";
+package basicmanagement;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.basicmanagement.proto.basicmanagement";
+option java_outer_classname = "BMManagerServiceProto";
+/////////////////////////////////service//////////////////////////////////////
+// 分域权限
+service BMManagerService {
+
+
+
+    //  运营经理,销售经理的关联查询(查询他的客户数,学校数,班级数,学生数)
+    //  目前的需求是只查运营经理的,roleName传"运营"
+    rpc listRoleUserData (RequestRoleUserData) returns (ResponseRoleUserData) {}
+
+    //  查询某个运营经理的相关信息,他负责的学校,教师数,班级数,学生数
+    rpc listOperationManagerData (RequestId) returns (ResponseSchoolListByOperationManagerId) {}
+
+}
+/////////////////////////////////base message//////////////////////////////////////
+
+message RequestId {
+    string id = 1;
+}
+
+message ResponseSchoolListByOperationManagerId{
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //学校信息
+    repeated SchoolInfo schoolInfo = 3;
+}
+//学校信息
+message SchoolInfo{
+    //学校id
+    int64 id = 1;
+    //学校名称
+    string name = 2 ;
+    //客户类型
+    int32 customerType = 3 ;
+
+    int32    teacherNum = 4;      //  教师数
+    int32    classNum = 5;       //  班级数
+    int32    studentNum = 6;     //  学生数
+    //所属客户信息
+    repeated CustomerInfo CustomerInfo = 7;
+
+}
+//所属客户信息
+message CustomerInfo{
+    //所属客户id
+    int64 superiorId = 1;
+    //所属客户名称
+    string superiorName = 2;
+    //所属客户类型 1伟东公司 2学校 3教育集团 4教育局
+    int32 customerType = 3;
+}
+
+
+//  -----------start----------------------------------------------
+message ResponseRoleUserData {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+
+    repeated RoleDataVo datas = 7;
+}
+message RoleDataVo {
+    string   userId = 1;
+    string   userName = 2;
+    int32    customerNum = 3;    //  客户数
+    int32    schoolNum = 4;      //  学校数
+    int32    classNum = 5;       //  班级数
+    int32    studentNum = 6;     //  学生数
+}
+message RequestRoleUserData {
+    int32 pageNo = 1;        //  页码   从1开始
+    int32 pageSize = 2;      //  每页大小
+    string roleName = 3;     //  角色名
+    string name = 4;         //  用户名模糊查询   非必传
+}
+
+///////////////////////////////////request message////////////////////////////////////
+
+
+///////////////////////////////////response message////////////////////////////////////

@@ -1,0 +1,107 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenterstatistic;
+option java_multiple_files = true; // 以外部类模式生成
+option java_package = "com.szwdcloud.statistic";  // 编译后生成的包名
+option java_outer_classname = "RSstatisticProto"; // 最外层类名称
+
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+
+
+
+
+service RSstatisticService {
+
+    //  获取资源使用次数
+    rpc getResourceUseCount (ReqResourceUseCount) returns (RespResourceUseCount) {}
+
+    //  增加资源使用记录
+    rpc increaseResourceUseCount (ReqIncreaseResourceUseCount) returns (EmptyResp) {}
+
+    //  试题总量统计
+    rpc getQuestionTotalCount (google.protobuf.Empty) returns (RespQuestionTotalCount) {}
+
+    //  新增试题明细
+    rpc listInsertQuestionDetail(RequestInsertQuestionDetailList) returns (ResponseInsertQuestionDetailList){}
+
+}
+
+
+message RequestInsertQuestionDetailList {
+    int32 pageNo = 1;       //  页码   从1开始
+    int32 pageSize = 2;     //  每页大小,默认10
+    int64 startTime = 3;    //  开始时间
+    int64 endTime = 4;      //  结束时间
+    string name = 5;        //  模糊查询
+}
+
+message ResponseInsertQuestionDetailList {
+    string code = 1;    //  操作标识（0成功 1失败）
+    string msg = 2;     //  操作结果
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+    repeated InsertQuestionDetailVo data = 7;
+}
+
+message InsertQuestionDetailVo {
+    string creatorId = 1;   //  创建者id
+    string creatorName = 2; //  创建者姓名
+    int64  customerId = 3;  //  客户id,学校id
+    string customerName = 4;     //  客户名称,学校名称
+    int32  insertNum = 5;        //  新增总数
+    int32  auditedNum = 6;       //  审核通过数
+    int32  usedNum = 7;          //  使用次数
+}
+
+//  --------------------------------------------------------------------------------------------
+
+message RespQuestionTotalCount {
+    string code = 1;    //  操作标识（0成功 1失败）
+    string msg = 2;     //  结果信息
+    int32  conceptQuestionCount = 3;    //  概念测试题数量
+    int32  exerciseQuestionCount = 4;   //  练习题数量
+    repeated SubjectQuestionCountVo data = 5;
+}
+
+message SubjectQuestionCountVo {
+    int32  conceptQuestionCount = 1;    //  概念测试题数量
+    int32  exerciseQuestionCount = 2;   //  练习题数量
+    string subjectName = 3;
+    int32  subjectId = 4;
+}
+
+message ReqIncreaseResourceUseCount {
+    int32 statisticsType = 1;   //  1表示一般使用统计,2表示上课统计
+    int32 resourceType = 2;     //  资源类型,1视频,2音频,3教案,4PPT,5学案,6图片,7包,8文本,9其他,10题,11课件
+    string resourceId = 3;      //  资源id
+    string userId = 4;          //  使用者id
+    string classId = 5;         //  使用的班级id     可不填
+    int64  customerId = 6;      //  使用的客户id     可不填
+}
+
+
+message ReqResourceUseCount {
+    int32 resourceType = 1;     //  资源类型,1视频,2音频,3教案,4PPT,5学案,6图片,7包,8文本,9其他,10题,11课件
+    string resourceId = 2;      //  资源id
+}
+
+message RespResourceUseCount {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    int32  totalUseCount = 3;       //  总使用次数
+    int32  todayUseCount = 4;       //  今日使用次数
+    int32  keTotalUseCount = 5;     //  上课总使用次数
+    int32  keTodayUseCount = 6;     //  上课今日使用次数
+}
+
+message EmptyResp {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+}
