@@ -12,7 +12,7 @@ class CCCustomerListServiceTest(unittest.TestCase):
     def test01_searchCustomer(self):
         response = self.CCCustomerListServiceClient.searchCustomer(CCCustomerListService_pb2.RequestCustomerSearch(#keyWord='伟东',#关键字
                                                                                                                    #customerType=0,#客户类型,1伟东公司2学校3教育集团4教育局'
-                                                                                                                   #businessId=4,#业务id int
+                                                                                                                   businessId=2,#业务id int
                                                                                                                    #customerId=4403050134,
                                                                                                                    #status=1,#状态
                                                                                                                    pageNo= 1,#第几页

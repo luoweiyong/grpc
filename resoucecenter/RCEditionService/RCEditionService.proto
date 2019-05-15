@@ -7,9 +7,20 @@ option java_outer_classname = "RCEditionServiceProto"; //最外层类名称
 
 import "RCCommon.proto";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
 
 //  教材和章节相关的
 service RCEditionService {
+
+
+    //  获取出版社列表
+    rpc listPress (google.protobuf.Empty) returns (ResponsePressList) {}
+
+    //  增删改教材版本
+    rpc manageEditionVersion (EditionVersionVo) returns (EmptyResp) {}
+
+    //  分页查询教材版本列表
+    rpc listEditionVersionAA (RequestEditionVersionListAA) returns (ResponseEditionVersionListAA) {}
 
     //  条件查询教材版本.沪教版,人教版...,
     rpc listEditionVersion (RequestEditionVersionList) returns (ResponseEditionVersionList) {}
@@ -29,12 +40,21 @@ service RCEditionService {
     //  获取某个教材的章节列表
     rpc listChapter (RequestChapterList) returns (ResponseChapterList) {}
 
-    //根据科目查教材版本
+    //根据科目查教材版本(结果message EditionVersionVo)
     rpc listEditionBySubject (google.protobuf.Int32Value) returns (ListResp) {}
-    //根据科目教材查年级
+    //根据科目教材查年级(结果message EditionVo)
     rpc listGradeByEdition(SubjectEditionReq) returns(ListResp){}
-    //根据科目教材年级查章节
-    rpc listChapterByEdition(EditionGradeReq) returns(ListResp){}
+    //根据科目教材年级查章节包含知识点(结果message StringValue)
+    rpc listChapterByEdition(EditionGradeReq) returns(SingleResp){}
+    //根据科目教材年级查章节不包含知识点(结果message StringValue)
+    rpc listChapterNoPointByEdition(EditionGradeReq) returns(SingleResp){}
+}
+
+
+message ResponsePressList {
+    string code = 1;
+    string msg = 2;
+    repeated string datas = 3;
 }
 
 message SubjectEditionReq{
@@ -55,8 +75,26 @@ message EditionGradeReq{
     int32 fascicleId = 4;
 }
 
+
+message RequestEditionVersionListAA {
+    int32 pageNo = 1;       //  页码   从1开始
+    int32 pageSize = 2;     //  每页大小,默认10
+}
+
+message ResponseEditionVersionListAA {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+    repeated EditionVersionVo datas = 7;
+}
+
 message RequestEditionVersionList {
-    int32 id = 1;   //  主键id   非必填
+    int32 id = 1;       //  主键id   非必填
     string name = 2;    //  名称模糊查询    非必填
 }
 
@@ -69,8 +107,13 @@ message ResponseEditionVersionList {
 }
 
 message EditionVersionVo{
-    int32 id = 1;   //  主键id
-    string name = 2;    //  名称
+    int32 id = 1;               //  主键id,新增不传,修改删除必传
+    string name = 2;            //  简称
+    string detailName = 3;      //  详细名称
+    string press = 4;           //  出版社名称
+    string versionNum = 5;      //  版次,2008年12第二版
+    int32 dataStatus = 6;       //  1:正常，2：冻结，3：删除',    启用传1,禁用传2
+    int32 manageType = 7;       //  1表示新增,2表示删除,3表示修改,,增删改操作必传
 }
 
 //  获取教材列表数据,所有字段都可不填

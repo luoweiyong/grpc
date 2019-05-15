@@ -62,13 +62,13 @@ class ServerUserServiceTest(unittest.TestCase):
         res = MessageToDict(response)
         print(res)
     def test07_searchPlatFormUser(self):#查询平台列表
-        response = self.ServerUserServiceClient.searchPlatFormUser(ServerUserService_pb2.PlatformUserSearchRequest(#roleId=83,
-                                                                                                                   content='15912345679',
+        response = self.ServerUserServiceClient.searchPlatFormUser(ServerUserService_pb2.PlatformUserSearchRequest(roleId=144,
+                                                                                                                   #content='15912345679',
                                                                                                                    pageNo=1,
                                                                                                                    pageSize=10))
         res = MessageToDict(response)
         print(res)
-        print("code是:%s"%(res['code']))
+        # print("code是:%s"%(res['code']))
     def test08_searchCustomerUser(self):#查询客户列表
         response = self.ServerUserServiceClient.searchCustomerUser(ServerUserService_pb2.CustomerUserSearchRequest(#roleId=88,
                                                                                                                    #customerId=6211241296,
