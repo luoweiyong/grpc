@@ -4,6 +4,7 @@ import unittest,grpc,RCEditionService_pb2,RCEditionService_pb2_grpc
 from google.protobuf.json_format import MessageToDict
 from readData import yamlRead
 from google.protobuf import wrappers_pb2
+from google.protobuf import empty_pb2
 class RCEditionServiceTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -91,6 +92,26 @@ class RCEditionServiceTest(unittest.TestCase):
                                                                                                          gradeId=3,
                                                                                                          fascicleId=4#上下学期
                                                                                                          ))
+        res = MessageToDict(response)
+        print(res)
+    def test10_listPress(self):#获取出版社列表
+        response = self.RCEditionServiceClient.listPress(empty_pb2.Empty())
+        res = MessageToDict(response)
+        print(res)
+    def test11_manageEditionVersion(self):
+        response = self.RCEditionServiceClient.manageEditionVersion(RCEditionService_pb2.EditionVersionVo(id=1,#主键id,新增不传,修改删除必传 int
+                                                                                                         name=2,#string 简称
+                                                                                                         detailName=3,#string 详细名称
+                                                                                                         press=4,#string 出版社名称
+                                                                                                         versionNum=5,#string 版次,2008年12第二版
+                                                                                                         dataStatus=6,#int 1:正常，2：冻结，3：删除',    启用传1,禁用传2
+                                                                                                         manageType=7#1表示新增,2表示删除,3表示修改,,增删改操作必传
+                                                                                                         ))
+        res = MessageToDict(response)
+        print(res)
+    def test12_listEditionVersionAA(self):
+        response = self.RCEditionServiceClient.listEditionVersionAA(RCEditionService_pb2.RequestEditionVersionListAA(pageNo=1,
+                                                                                                                     pageSize=10))
         res = MessageToDict(response)
         print(res)
 if __name__ == '__main__':
