@@ -1,0 +1,197 @@
+syntax = "proto3";
+package platformserver;
+//option java_multiple_files = true;
+//option java_package = "com.szwdcloud.platformserver.proto.platformserver";
+//option java_outer_classname = "ServerUserServiceProto";
+import "ServerCommonMessage.proto";
+import public "google/protobuf/timestamp.proto";
+
+service ServerUserService {
+    //保存用户
+    rpc save(SaveRequest) returns(Response);
+    //更新用户
+    rpc update(UpdateRequest)returns(Response);
+    //删除用户
+    rpc delete(DeleteRequest)returns(Response);
+    rpc findOne(FindOneUserRequest)returns(Response);
+    //查询用户
+    rpc searchForBM(SearchRequestForBM)returns(Response);
+    //用户重置密码
+    rpc resetPassword(ResetPasswordRequest)returns(Response);
+    //用户绑定角色
+    rpc associationRole(AssociationRoleRequest)returns(Response);
+    //用户解绑角色
+    rpc unAssociationRole(UnAssociationRoleRequest)returns(Response);
+    //账号的启用禁用
+    rpc switchSign(SwitchSignRequest)returns(Response);
+    //查询用户的所有角色
+    rpc findRoles(FindRolesRequest)returns(Response);
+
+    //  根据角色名和用户名模糊查询用户列表  lb
+    rpc listUserByCondition (RequestUserListByCondition) returns (ResponseUserListByCondition) {}
+
+    //  根据id查询用户信息  lb
+    rpc getUserById (RequestUserById) returns (ResponseUserById) {}
+}
+
+///////////////////////////////request message////////////////////////////////////
+
+//  根据角色名和用户名模糊查询用户列表,根据用户id查询用户信息-----------start----------------------------------------------
+message ResponseUserListByCondition {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+
+    repeated UserVo datas = 7;
+}
+message UserVo {
+    string   userId = 1;
+    string   userName = 2;
+    string   userMobile = 3;
+}
+message RequestUserListByCondition {
+    int32 pageNo = 1;        //  页码   从1开始
+    int32 pageSize = 2;      //  每页大小
+    string roleName = 3;     //  角色名
+    string name = 4;         //  用户名
+}
+
+message RequestUserById {
+    string userId = 1;
+}
+message ResponseUserById {
+    string   code = 1;
+    string   msg = 2;
+    UserVo   userVo = 3;
+}
+//  根据角色名和用户名模糊查询用户列表,根据用户id查询用户信息-----------end--------------------------------------------
+
+//保存用户请求
+message SaveRequest{
+    //用戶名 必传
+    string username = 1;
+    //可不传   性别
+    int32 sex = 2;
+    //可不传  年龄
+    int32 age = 3;
+    //必传  电话号码
+    string mobile = 4;
+    //可不传  关联的客户ID  默认 伟东公司  1
+    int64 customerId = 6;
+    //可不传  用户图像Id
+    string userPortrait = 7;
+    //必传  平台用户传1，客户用户传2，用户传3
+    int32 userType = 8;
+    //必传  启用传1  启用传0
+    int32 status = 9;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//更新用户请求
+message UpdateRequest{
+    //用户ID  必传
+    string id = 1;
+    //用户名 必传
+    string username = 2;
+    //性别  可不传
+    int32 sex = 3;
+    //年龄 可不传
+    int32 age = 4;
+    //电话 必传
+    string mobile = 5;
+    //客户ID
+    int64 customerId = 7;
+    //用户图像  可不传
+    string userPortrait = 8;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//删除用户请求
+message DeleteRequest{
+    string id = 1;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//用于基础中心调用
+message SearchRequestForBM{
+    int32 startPage = 1;
+    int32 pageSize = 2;
+    string userName = 3;
+    string roleName = 4;
+}
+
+message SearchResultForBM{
+  repeated string  userName = 1;
+}
+
+
+///////////////////////////////request message////////////////////////////////////
+//用户绑定角色请求
+message AssociationRoleRequest{
+   string userId = 1;
+   int32 roleId = 2;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//用户解绑角色请求
+message UnAssociationRoleRequest{
+   string id = 1;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//用户重置密码请求
+message ResetPasswordRequest{
+    string id =1;
+    string password = 2;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//用户账号启用禁用接口
+message SwitchSignRequest{
+    string id =1;
+}
+
+///////////////////////////////request message///////////////////////////////////
+//角色查询
+message FindRolesRequest{
+    string username = 1;
+}
+
+message FindRolesResult{
+    message Role{
+        int32 id = 1;
+        string name = 2;
+        string roleType = 3;
+        google.protobuf.Timestamp createTime = 4;
+        google.protobuf.Timestamp updateTime = 5;
+    }
+    repeated Role role = 1;
+}
+
+message FindOneUserRequest{
+    string id = 1;
+}
+
+message FindOneUserResult{
+    //用户ID  必传
+    string id = 1;
+    //用户名 必传
+    string username = 2;
+    //性别  可不传
+    int32 sex = 3;
+    //年龄 可不传
+    int32 age = 4;
+    //电话 必传
+    string mobile = 5;
+    //客户ID
+    int64 customerId = 7;
+    //用户图像  可不传
+    string userPortrait = 8;
+
+}

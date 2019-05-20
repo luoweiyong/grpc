@@ -1,0 +1,27 @@
+syntax = "proto3";
+package schoolbackground;
+option java_multiple_files = true;
+option java_package = "com.wd.proto.base.common";
+option java_outer_classname = "ResultProto";
+// 引入外部的proto对象
+import "google/protobuf/any.proto";
+
+//返回结果
+message Result {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+}
+
+//返回结果datas
+message ResultDatas {
+    //操作标识（0成功 1失败）
+    google.protobuf.Any any = 1; // Any对象
+}
+
+//返回结果datas
+message ResultDatasList {
+    //操作标识（0成功 1失败）
+    repeated google.protobuf.Any any = 1; // Any对象
+}

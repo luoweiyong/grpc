@@ -1,0 +1,192 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.workorder"; //所在包名
+option java_outer_classname = "RCWorkOrderServiceProto"; //最外层类名称
+
+import "RCCommon.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+//工单
+service RCWorkOrderService {
+    //工单查询
+    rpc listWorkOrder (RequestWorkOrder) returns (ReponseListWorkOrder) {    }
+    //工单详情信息查询
+    rpc listWorkOrderDetail (RequestWorkOrderDetail) returns (ReponseListWorkOrderDetail) {    }
+    //工单编辑
+    rpc editWorkOrder (RequestEditWorkOrder) returns (SingleResp) {    }
+    //工单新增
+    rpc saveWorkOrder (RequestWorkOrderSaveOrUpdate) returns (EmptyResp) {    }
+    //工单更新
+    rpc updateWorkOrder (RequestWorkOrderSaveOrUpdate) returns (EmptyResp) {    }
+    //工单删除
+    rpc deleteWorkOrder (RequestDeleteWorkOrder) returns (EmptyResp) {    }
+    //版本章节匹配
+    rpc mateWorkOrder (RequestMateWorkOrder) returns (ResponseMateWorkOrder) {    }
+
+}
+/////////////////////////////////base message//////////////////////////////////////
+//工单
+message WorkOrderList {
+    //工单号
+    int64 optId = 1;
+    //新版本id
+    int64 versionNewId = 2;
+    //旧版本id
+    int64 versionOldId = 3;
+    //处理状态(0已处理 1未处理 2处理中)
+    string handleStatus = 4;
+    //创建时间
+    google.protobuf.Timestamp creatTime = 5;
+    //更新时间
+    google.protobuf.Timestamp updateTime = 6;
+    //新版本名称
+    string versionNewName = 7;
+    //旧版本名称
+    string versionOldName = 8;
+}
+
+//工单章节关联表
+message WorkOrderChapterList {
+    //工单号
+    int64 optId = 1;
+    //操作方式(1剪切2复制)
+    string optType = 2;
+    //新章节id
+    int64 chapterNewId = 3;
+    //旧章节id
+    int64 chapterOldId = 4;
+    //创建时间
+    google.protobuf.Timestamp creatTime = 5;
+    //更新时间
+    google.protobuf.Timestamp updateTime = 6;
+    //新章节名称
+    string chapterNewName = 7;
+    //旧章节名称
+    string chapterOldName = 8;
+}
+
+
+//工单章节关联表
+message WorkOrderChapter {
+    //工单号 (新增传0或不传)
+    int64 optId = 1;
+    //操作方式(1剪切2复制)
+    string optType = 2;
+    //新章节id
+    int64 chapterNewId = 3;
+    //旧章节id
+    int64 chapterOldId = 4;
+}
+//版本章节匹配
+message MateWorkOrder{
+    //新章节id
+    int64 chapterNewId = 1;
+    //旧章节id
+    int64 chapterOldId = 2;
+    //新章节名称
+    string chapterNewName = 3;
+    //旧章节名称
+    string chapterOldName = 4;
+}
+
+///////////////////////////////////request message////////////////////////////////////
+//工单查询
+message RequestWorkOrder{
+    //学段
+    int32 stageId = 1;
+    //科目
+    int32 subjectId = 2;
+}
+//工单详情信息
+message RequestWorkOrderDetail{
+    //工单号
+    int64 optId = 1;
+}
+//工单编辑
+    //工单号
+message RequestEditWorkOrder{
+    int64 optId = 1;
+}
+//工单删除
+message RequestDeleteWorkOrder{
+    //工单号
+    int64 optId = 1;
+}
+//工单新增或修改
+message RequestWorkOrderSaveOrUpdate {
+    //工单号 新增传0
+    int64 optId = 1;
+    //新版本id
+    int64 versionNewId = 2;
+    //旧版本id
+    int64 versionOldId = 3;
+    //处理状态(0已处理 1未处理 2处理中)
+    string handleStatus = 4;
+    //工单章节关联信息
+    repeated WorkOrderChapter workOrderChapters = 5;
+}
+//版本章节匹配
+message RequestMateWorkOrder{
+    //新版本id
+    int64 versionNewId = 1;
+    //旧版本id
+    int64 versionOldId = 2;
+}
+
+
+///////////////////////////////////response message////////////////////////////////////
+//版本章节匹配列表
+message ResponseMateWorkOrder{
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //版本章节匹配
+    repeated MateWorkOrder mateWorkOrders = 3;
+}
+//工单列表查询
+message ReponseListWorkOrder {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //工单列表
+    repeated WorkOrderList workOrderLists = 3;
+}
+//工单详情列表查询
+message ReponseListWorkOrderDetail {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //工单详情列表
+    repeated WorkOrderChapterList workOrderChapterLists = 3;
+}
+//工单编辑
+message ReponseEditWorkOrder {
+    //工单号
+    int64 optId = 1;
+    //新版本id
+    int64 versionNewId = 2;
+    //旧版本id
+    int64 versionOldId = 3;
+    //处理状态(0已处理 1未处理 2处理中)
+    string handleStatus = 4;
+    //创建时间
+    google.protobuf.Timestamp creatTime = 5;
+    //更新时间
+    google.protobuf.Timestamp updateTime = 6;
+    //新版本名称
+    string versionNewName = 7;
+    //旧版本名称
+    string versionOldName = 8;
+    //学段
+    int32 stageId = 9;
+    //科目
+    int32 subjectId = 10;
+    //工单详情信息
+    repeated WorkOrderChapterList workOrderChapterLists = 11;
+}

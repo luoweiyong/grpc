@@ -1,0 +1,46 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.proto";
+option java_outer_classname = "CommonProto";
+
+//////////////////////////const////////////////////////////////
+//操作标识
+enum ReturnCode {
+    SYS_OK =  0; //0,操作成功;
+    SYS_ERR_EXCEPTION = 999; //999,操作失败(未知异常
+    SYS_ERR_NOAUTH = 1;//1,您没有该项操作的权利;
+    SYS_ERR_TOKENINVALID = 2; //2,TOKEN信息已失效
+    SYS_ERR_PARAMERROR = 3; //3,参数错误
+    SYS_ERR_RPCSERVICEERROR = 4;  //RPC服务器异常
+    SYS_ERR_UPLOADAUDIO = 5;  //音频上传失败
+    SYS_ERR_UPLOADFILE = 6;   //文件上传失败
+    SYS_ERR_NOAUDIOFILE = 7;  //未发现音频文件
+    SYS_ERR_NOIMAGEFILE = 8;  //未发现图片文件
+    SYS_ERR_BUSINESSEXCEPTION = 9; //业务异常统一代号
+}
+////////////////////////////base message//////////////////////////////////////
+//学制
+message SchoolingLength {
+    //学制id
+    string id = 1;
+    //学制编码
+    string code = 2;
+    //学制名称
+    string schoolingLengthName = 3;
+    //  学制覆盖的年级,多个以,隔开------格式为   1,2,3,4
+    string gradeId = 4;
+}
+///////////////////////////////request message////////////////////////////////////////////
+//请求学制列表参数定义
+message RequestBMSubjectSchoolingLength {
+    string id = 1;
+}
+//////////////////////////////response message////////////////////////////////////////////
+// 学制列表数据
+message BMSubjectResponseSchoolingLengthList {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    repeated SchoolingLength datas = 3;
+}

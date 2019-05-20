@@ -1,0 +1,39 @@
+syntax = "proto3";
+package platformserver;
+//option java_multiple_files = true;
+//option java_package = "com.szwdcloud.platformserver.proto.platformserver";
+//option java_outer_classname = "ServerPrivilegeServiceProto";
+import "ServerCommonMessage.proto";
+/////////////////////////////////service//////////////////////////////////////
+// 基础管理中心响应客户中心请求
+service ServerPrivilegeService {
+    // 根据条件返回学制列表
+    rpc save(PrivilegeSaveRequest) returns (Response);
+    rpc update(PrivilegeUpdateRequest)returns(Response);
+    rpc delete(PrivilegeDeleteRequest)returns(Response);
+}
+
+message PrivilegeSaveRequest{
+    string parentId = 1;
+    string code = 2;
+    string name = 3;
+    string moduleName = 4;
+    int32 systemCategory = 5;
+    int32 type = 6;
+    string url = 7;
+    string createUser = 8;
+}
+message PrivilegeUpdateRequest{
+    string id = 1;
+    string parentId = 2;
+    string code = 3;
+    string name = 4;
+    string moduleName = 5;
+    int32 systemCategory = 6;
+    int32 type = 7;
+    string url = 8;
+    string createUser = 9;
+}
+message PrivilegeDeleteRequest{
+    string id = 1;
+}

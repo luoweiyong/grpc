@@ -1,0 +1,40 @@
+syntax = "proto3";
+package platformserver;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.platformserver.proto.platformserver";
+option java_outer_classname = "ServerCommonServiceProto";
+import "ServerCommonMessage.proto";
+/////////////////////////////////response//////////////////////////////////////
+// 公共服务模块通用服务
+service ServerCommonService {
+   rpc login(LoginRequest)returns(Response);
+}
+/////////////////////////////////base message//////////////////////////////////////
+message LoginRequest{
+    //用户的唯一标识  这里是电话号码
+    string userId = 1;
+    //密码md5(userId+时间戳+md5(真实密码))；
+    string password = 2;
+    //时间戳
+    string token = 3;
+    //登录分类（1密码 2手机验证码 3扫码）；
+    int32 loginType = 4;
+    //登录来源（1平台 2学校 3 Ios App 4 Andorid App 5授课端）
+    int32 loginSource = 5;
+}
+
+///////////////////////////////////request message////////////////////////////////////
+message LoginResult{
+    message Auth{
+        string id = 5;
+        string code = 1;
+        string name = 2;
+        string url = 3;
+        string parentId = 4;
+    }
+    string id = 1;
+    string userName = 2;
+    int64 schoolId = 3;
+    repeated Auth auth = 4;
+}
+///////////////////////////////////response message////////////////////////////////////

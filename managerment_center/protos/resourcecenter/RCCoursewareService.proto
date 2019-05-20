@@ -1,0 +1,111 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.courseware"; //编译后生成的包名
+option java_outer_classname = "RCCoursewareServiceProto"; //最外层类名称
+import "RCCommon.proto";
+
+// 课件相关的
+service RCCoursewareService {
+
+    //  新增课件
+    rpc insertCourseware (ReqInsertCourseware) returns (EmptyResp) {}
+
+    //  课件加精/取消加精
+    rpc isJingCourseware (ReqCoursewareIsJing) returns (EmptyResp) {}
+
+    //  新增课件的页
+    rpc insertCoursewarePage (CoursewarePageVo) returns (EmptyResp) {}
+
+    //  修改课件的页
+    rpc updateCoursewarePage (CoursewarePageVo) returns (EmptyResp) {}
+
+    //  删除课件的页.只传coursewareId,pageNum字段
+    rpc deleteCoursewarePage (CoursewarePageVo) returns (EmptyResp) {}
+
+    //  条件查询课件列表
+    rpc listCourseware (ReqCoursewareList) returns (ResponseCoursewareList) {}
+}
+
+
+
+message CoursewarePageVo{
+    string coursewareId = 1;         //  课件id
+    string text = 2;                 //  文本
+    string contentId = 3;            //  页内容id（试题id或素材(图片,文档,音视频的url)）
+    int32  contentType = 4;          //  内容类型 1试题 2视频 3音频 4word 5PPT  6ZIP 7图片  8其他',
+    int32  pageNum = 5;              //  页编号
+}
+
+
+message ReqInsertCourseware{    //  所有字段必填
+    string teacherId = 1;       //  老师id
+    string name = 2;            //  课件名
+    int64  customerId = 3;      //  客户id
+    int32  editionId = 4;       //  教材id
+    repeated  int32  chapterIds = 5;    //  关联的章节id,可以多个,至少一个
+    repeated  int32  pointIds = 6;      //  关联的知识点id,可以多个,至少一个
+}
+
+
+message CoursewareVo{
+    string id = 1;              //  主键id
+    string teacherId = 2;       //  老师id
+    string name = 3;            //  课件名
+    int64  customerId = 4;      //  客户id
+    int32  subjectId = 5;       //  科目id
+    int32  editionId = 6;       //  教材id
+    int32  isBoutique = 7;      //  是否精品 0否 1是 默认0
+    int32  pageCount = 8;       //  课件的页数
+}
+
+message ReqCoursewareIsJing{
+    string id = 1;              //  课件id
+    int32 tag = 2;              //  加精传1,取消加精传0
+}
+
+
+//  条件查询课件列表,所有字段非必填
+message ReqCoursewareList{
+    int32 isBoutique = 1;   //  如果是要精品的传1,否则不传
+    string name = 2;        //  模糊搜索
+    int32  subjectId = 3;   //  学科
+    int32  editionVersionId = 4;    //  教材版本
+    int32  stageId = 5;     //  学段
+    int32  gradeId = 6;     //  年级
+    int32  fascicleId = 7;      //  分册: 1-上册 2-下册
+    int32 orderType = 8;        //  0更新时间降序,1更新时间升序
+    int32 pageNo = 9;           //  页码   从1开始
+    int32 pageSize = 10;        //  每页大小
+}
+
+message CoursewareItemVo{   //  给课件item使用
+    string id = 1;              //  课件id
+    int32 pageCount = 2;        //  课件的页数
+    int32 isBoutique = 3;       //  是否精品 0否 1是 默认0
+    string editionVersionName = 4;  //  教材版本名称,人教版这样的
+    string gradeName = 5;           //  年级名
+    string subjectName = 6;         //  科目名
+    string coursewareName = 7;      //  课件名
+    string  stage = 8;              //  1小学,2初中,3高中
+    string  fascicle = 9;           //  分册: 1-上册, 2-下册
+    repeated  string chapterName = 10;  //  关联的章节名列表
+    repeated  string pointName = 11;    //  关联的知识点名列表
+    string   updateTime = 12;           //  更新时间
+    int32    referenceCount = 13;       //  引用次数
+    string   schoolName = 14;           //  学校名:深圳市宝安区西乡中学
+    string   teacherName = 15;          //  老师名
+}
+
+//  课件列表
+message ResponseCoursewareList {
+    string code = 1;    //操作标识（0成功 1失败）
+    string msg = 2;     //操作结果
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+    repeated CoursewareItemVo datas = 7;
+}
+

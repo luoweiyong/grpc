@@ -1,0 +1,120 @@
+syntax = "proto3";
+package platformserver;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.platformserver.proto.platformserver";
+option java_outer_classname = "ServerPrivilegeServiceProto";
+import "ServerCommonMessage.proto";
+/////////////////////////////////service//////////////////////////////////////
+// 基础管理中心响应客户中心请求
+service ServerPrivilegeService {
+    // 根据条件返回学制列表
+    rpc save(PrivilegeSaveRequest) returns (Response);
+    rpc update(PrivilegeUpdateRequest)returns(Response);
+    rpc delete(PrivilegeDeleteRequest)returns(Response);
+    rpc findChild(FindChildRequest)returns(Response);
+    rpc findAll(FindAllPrivilegeRequest)returns(Response);
+    rpc findPrivilegeSelective(FindPrivilegesRequest)returns(Response);
+    rpc findOne(FindOneRequest)returns(Response);
+}
+
+message PrivilegeSaveRequest{
+    string parentId = 1;
+    string code = 2;
+    string name = 3;
+    int32 systemCategory = 5;
+    int32 type = 6;
+    string url = 7;
+}
+
+message PrivilegeUpdateRequest{
+    string id = 1;
+    string parentId = 2;
+    string code = 3;
+    string name = 4;
+    string moduleName = 5;
+    int32 systemCategory = 6;
+    int32 type = 7;
+    string url = 8;
+}
+
+message FindChildRequest{
+    //平台 1 授课端 2 教师端App 3 家长端 4
+    int32 systemId = 1;
+    //想获得最上层父类可以不传这个字段。获得所有子节点，就传父节点ID
+    string parentid = 2;
+    //传上层菜单的名字
+    string parentName = 3;
+}
+
+message FindChildResult{
+    message Privilege{
+       string id = 1;
+       string name = 2;
+}
+ repeated Privilege privilege = 1;
+
+}
+
+message PrivilegeDeleteRequest{
+    string id = 1;
+}
+//查询所有的权限菜单 按钮
+message FindPrivilegesRequest{
+    int32 systemId = 1;
+    int32 type = 2;
+}
+
+message FindPrivilegesResult{
+    message Privilege{
+        string id = 1;
+        string code = 2;
+        string name = 3;
+        int32 type = 4;
+        string url = 5;
+        string parentId = 6;
+    }
+    repeated Privilege privilege = 1;
+}
+
+
+
+
+//查询所有菜单请求
+message FindAllPrivilegeRequest{
+    //系统ID 必传
+    string systemId = 1;
+    //模块ID 可不传
+    string module = 2;
+    //模糊查询内容
+    string content = 3;
+    int32 pageNo = 4;        //  页码   从1开始
+    int32 pageSize = 5;      //  每页大小
+}
+
+message FindAllPrivilegeResult{
+    message Privilege{
+        string id = 6;
+        string code = 1;
+        string name = 2;
+        string module = 3;
+        int32 type = 4;
+        string url = 5;
+    }
+    repeated Privilege privilege = 1;
+    int64 total = 2;    //  总数量
+    int32 pages = 3;    //  总页数
+    int32 pageNo = 4;   //  页码
+    int32 pageSize = 5; //  每页大小
+}
+message FindOneRequest{
+    string id = 1;
+}
+message FindOneResult{
+    string id = 1;
+    string code = 2;
+    string name = 3;
+    int32 type = 4;
+    string url = 5;
+    int32 systemId = 6;
+    repeated string parentIds = 7;
+}

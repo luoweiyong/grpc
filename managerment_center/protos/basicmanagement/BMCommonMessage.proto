@@ -1,0 +1,29 @@
+syntax = "proto3";
+package basicmanagement;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.basicmanagement.proto.basicmanagement";
+option java_outer_classname = "BMCommonMessageProto";
+// 引入外部的proto对象
+import "google/protobuf/any.proto";
+
+//分页封装数据
+message BMBatchDataPage {
+    /** 当前页 */
+    int32 page = 1;
+    /** 分页数 */
+    int32 pagesize = 2;
+    /** 开始行*/
+    int32 offset = 3;
+    /**总记录数*/
+    float totalRecords = 4;
+    /** 具体数据 */
+     google.protobuf.Any rows = 5; // 任何对象
+}
+
+//分页请求数据
+message BMDataPageRequestParam {
+    /** 当前页 */
+    int32 page = 1;
+    /** 分页数 */
+    int32 pagesize = 2;
+}

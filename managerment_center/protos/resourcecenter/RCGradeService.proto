@@ -1,0 +1,29 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.grade"; //编译后生成的包名
+option java_outer_classname = "RCGradeServiceProto"; //最外层类名称
+
+// 年级相关的
+service RCGradeService {
+    //  查询年级列表
+    rpc listGrade (RequestGradeList) returns (ResponseGradeList) {}
+}
+
+message RequestGradeList {
+    int32 stageId = 1;  //  学段id,1小学,2初中,3高中,非必传,不传或传0为获取所有
+}
+
+//  年级列表数据
+message ResponseGradeList {
+    string code = 1;    //  操作标识（0成功 1失败）
+    string msg = 2;     //  操作结果
+    repeated GradeVo datas = 3;
+}
+
+message GradeVo{
+    int32 id = 1;
+    int32 stageId = 2;  // 学段id,1小学,2初中,3高中
+    string gradeName = 3;
+}

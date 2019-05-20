@@ -1,0 +1,38 @@
+//指定proto3格式
+syntax = "proto3";
+package hbaseservice;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.hbase.questiondataextention"; //编译后生成的包名
+option java_outer_classname = "HBQuestionDataExtentionServiceProto"; //最外层类名称
+
+import "google/protobuf/wrappers.proto";
+
+// HbaseQuestionDataExtention表相关的
+service HBQuestionDataExtentionService {
+    //  向表中写数据
+    rpc insertData (QuestionDataExtention) returns (QuestionDataExtentionList) {}
+    //通过id查询表中的字段
+    rpc queryDataByRowkey (google.protobuf.StringValue) returns (QuestionDataExtentionValue) {}
+
+}
+
+message QuestionDataExtentionList {
+    string code = 1;    //  操作标识（0成功 1失败）
+    string msg = 2;     //  操作结果
+}
+
+message QuestionDataExtentionValue{
+    string code = 1;    //  操作标识（0成功 1失败）
+    string msg = 2;     //  操作结果
+    QuestionDataExtention data = 3;
+}
+
+message QuestionDataExtention {
+   //hbase表的字段
+    string id=1;
+    string body=2;
+    string selection=3;
+    string answer=4;
+    string errorType=5;
+    string errorAnalysis=6;
+}

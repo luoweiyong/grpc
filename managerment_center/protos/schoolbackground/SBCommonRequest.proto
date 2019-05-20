@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.wd.proto.base.operating_platform";
+option java_outer_classname = "CustomerRoleProto";
+
+//客户角色信息
+message CustomerRole {
+    //角色id
+    string id = 1;
+    //角色名称
+    string roleName = 2;
+    //模块关联
+    repeated ModuleRela moduleRela = 3;
+}
+
+//年级科目出版社信息
+message Edition {
+    //教材id
+    string id = 1;
+    //年级Id
+    string schoolGradeId = 2;
+    //科目id
+    string subjectId = 3;
+    //出版社id
+    string pressId = 4;
+    //出版社名称
+    string pressName = 5;
+    //分册id
+    string fascicleId = 6;
+    //封面地址
+    string coverUrl = 7;
+}
+
+//登录用户信息
+message LoginUser {
+    string id = 1;
+    //用户名称
+    string userName = 2;
+    //学校Id
+    string schoolId = 3;
+    //权限码
+    string accessCode = 4;
+
+}
+
+//角色关联模块信息
+message ModuleRela {
+    //模块id
+    string id = 1;
+    //模块名称
+    string moduleName = 2;
+    //子模块信息
+    repeated ModuleRela moduleRela = 3;
+}
+
+//出版社信息
+message Press {
+    //出版社id
+    string id = 1;
+    //出版社名称
+    string pressName = 2;
+}
+
+//年级信息
+message SchoolGrade {
+    //年级id
+    string id = 1;
+    //年级名称
+    string gradeName  = 2;
+    //学校Id
+    string schoolId = 3;
+}
+
+//年级科目信息
+message SchoolGradeSubject {
+    //科目id
+    string id = 1;
+    //科目名称
+    string subjectName = 2;
+    //年级Id
+    string schoolGradeId = 3;
+    //学制年级关联id
+    string schoolingLengthGradeId = 4;
+    //科目编码
+    string code = 5;
+}
+
+//学制信息
+message SchoolingLength {
+    //学制id
+    string id = 1;
+    //学制code
+    string code  = 2;
+    //学制名称
+    string schoolingLengthName  = 3;
+    //学校Id
+    string schoolId = 4;
+}
+
+//学制年级信息
+message SchoolingLengthSchoolGrade {
+    //年级id
+    string id = 1;
+    //年级名称
+    string gradeName  = 2;
+    //学制id
+    string schoolingLength  = 3;
+}
+
+//科目信息
+message Subject {
+    //科目id
+    string id = 1;
+    //学校Id
+    string schoolId = 2;
+    //科目名称
+    string subjectName = 3;
+    //学段id
+    string staged = 4;
+    //科目编码
+    string code = 5;
+}
+
+//科目年级信息
+message SubjectSchoolGrade {
+    //年级id
+    string id = 1;
+    //科目Id
+    string subjectId = 2;
+    //年级名称
+    string gradeName = 3;
+}

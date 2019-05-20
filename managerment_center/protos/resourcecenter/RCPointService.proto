@@ -1,0 +1,72 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.point"; //所在包名
+option java_outer_classname = "RCPointServiceProto"; //最外层类名称
+
+import "RCCommon.proto";
+import "google/protobuf/wrappers.proto";
+
+//定义服务
+service RCPointService {
+    //根据科目查知识点(结果message Point)
+    rpc listPointsBySubjectId (google.protobuf.Int32Value) returns (ListResp) {
+    }
+    //根据科目查知识点(结果message StringValue)
+    rpc listPointsJsonBySubjectId (google.protobuf.Int32Value) returns (SingleResp) {
+    }
+    //新建知识点(结果message Int32Value)
+    rpc createPoint (Point) returns (SingleResp) {
+    }
+    //修改知识点
+    rpc updatePoint (Point) returns (EmptyResp) {
+    }
+    //删除知识点
+    rpc deletePoint (google.protobuf.Int32Value) returns (EmptyResp) {
+    }
+    //升级
+    rpc upGradePoint (google.protobuf.Int32Value) returns (EmptyResp) {
+    }
+    //降级
+    rpc downGradePoint (google.protobuf.Int32Value) returns (EmptyResp) {
+    }
+    //升序
+    rpc upOrderPoint (google.protobuf.Int32Value) returns (EmptyResp) {
+    }
+    //降序
+    rpc downOrderPoint (google.protobuf.Int32Value) returns (EmptyResp) {
+    }
+    //  根据多个章节id查询关联的知识点列表
+    rpc listPointByChapterIds (ReqPointListByChapterIds) returns (RespPointList) {
+    }
+    //  根据知识点id查知识点信息
+    rpc getPointById (google.protobuf.Int32Value) returns (SingleResp) {
+    }
+}
+
+message Point {
+    //知识点id(新建不填，修改必填)
+    int32 id = 1;
+    //知识点父id
+    int32 parentId = 2;
+    //知识点序号
+    int32 pointIndex = 3;
+    //科目id
+    int32 subjectId = 4;
+    //知识点名称
+    string pointName = 5;
+}
+
+message ReqPointListByChapterIds {
+    repeated int32 chapterIds = 1; //  章节id集合
+}
+
+message RespPointList {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //结果数据
+    repeated Point datas = 3;
+}

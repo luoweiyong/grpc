@@ -1,0 +1,563 @@
+syntax = "proto3";
+package customercenter;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.customercenter.proto.customercenter";
+option java_outer_classname = "CCCustomerListServiceProto";
+// 引入外部的proto对象
+import "CCCommonMessage.proto";
+//客户列表
+service CustomerListService {
+    // 查询客户信息
+    rpc searchCustomer (RequestCustomerSearch) returns (CCBatchDataPageMsg) {}
+    // 新增客户信息
+    rpc insertCustomer (RequestCustomerInsert) returns (InsertReply){}
+    //编辑客户信息
+    rpc editCustomer (RequestCustomerEdit) returns (ReplyMsg){}
+    // 更新客户信息
+    rpc updateCustomer (RequestCustomerUpdate) returns (BooleanReply){}
+    // 删除客户信息
+    rpc deleteCustomer (RequestCustomerDelete) returns (BooleanReply){}
+
+    //组织机构列表查询
+    rpc listOrgani (RequestListOrgani) returns (CCBatchDataPageMsg){}
+    //组织机构查询
+    rpc searchOrgani (RequestSearchOrgani) returns (ReplyMsg){}
+    //新增组织机构信息
+    rpc insertOrgani (RequestInsertOrgani) returns (BooleanReply){}
+    //编辑组织机构信息
+    rpc editOrgani (RequestEditOrgani) returns (ReplyMsg){}
+    //更新组织机构信息
+    rpc updateOrgani (RequestUpdateOrgani) returns (BooleanReply){}
+    //删除组织机构信息
+    rpc deleteOrgani (RequestDeleteOrgani) returns (BooleanReply){}
+
+    //根据客户id更新业务状态
+    rpc updateBusinessStatus (RequestUpdateBusiness) returns (BooleanReply){}
+    //业务管理列表查询(根据客户id)
+    rpc listBusinessInfo (RequestListBusinessInfo) returns (CCBatchDataPageMsg){}
+    //增加下属学校
+    rpc addUnderLingSchool (RequestAddUnderLingSchool) returns (BooleanReply){}
+    //删除下属学校
+    rpc deleteUnderLingSchool (RequestDeleteUnderLingSchool) returns (BooleanReply){}
+    //列出所有学校
+    rpc listSchool (RequestListSchool) returns (ReplyMsg){}
+    //  rpc listBusinessInfoByCustomerId (RequestListBusinessInfo) returns (BusinessList){}
+    //查询配置信息 1、客户类别 2、区域类别 3、区域等级 4、业务类别。
+    rpc listCommonConfig (RequestCommonConfig) returns (ReplyMsg){}
+
+    //根据运营经理id  查询他的客户数量,学校数量,学校id数组   暂为基础管理中心提供
+    rpc selectCustomerNumByIdParam (RequestSelectCustomerNumByIdParam) returns (ResponseSelectCustomerNumByIdParam){}
+    //根据运营经理id  查询他所负责的所有学校名称(包括教育局，教育集团)及学校所属客户名称   暂为基础管理中心提供
+    rpc listSchoolByIdParam (RequestListSchoolByIdParam) returns (ResponseListSchoolByIdParam){}
+    //根据运营经理id，多个客户id修改客户和运营经理的绑定关系   暂为基础管理中心提供
+    rpc updateRelationByIdParam (RequestUpdateRelationByIdParam) returns (BooleanReply){}
+    //根据客户id查询客户名称以及客户权限(教育局，教育集团下属学校数)  暂为用户中心提供
+    rpc selectCustomerInfo (RequestSelectCustomerInfo) returns (ReplyMsg){}
+    //根据客户类型查询客户列表   暂为用户中心提供
+    rpc listCustomerByCustomerType (RequestListCustomerByCustomerType) returns (ReplyMsg){}
+
+    //根据客户id查询下属学校的信息
+    rpc listUnderLingSchoolAllInfo (RequestListUnderLingSchoolAllInfo) returns (ReplyMsg){}
+    //根据客户id返回上级客户信息
+    rpc listPcustomer (RequestListPcustomer) returns (ReplyMsg){}
+    //根据客户id返回下属学校数量(教育局,教育集团)
+    rpc listUnderLingSchool (RequestListUnderLingSchool) returns (ReplyMsg){}
+    //根据用户输入的学校名   模糊查询学校信息(id,学校名)
+    rpc fuzzyQueryCustomer (RequestFuzzyQueryCustomer) returns (ReplyMsg){}
+
+
+    rpc getCustomerInfo (RequestCustomerInfo) returns (RespCustomerInfo){}
+}
+
+message InsertReply{
+    //操作标识（0000成功 9999失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    // 客户id
+    int64 customerId = 3;
+}
+
+message RequestCustomerInfo{
+    string keyWord = 1;     // 学校关键字模糊查询
+    int64 customerId = 2;   // 客户id
+    int32 customerType = 3; // 客户类型 1伟东公司,2学校,3教育集团,4教育局
+}
+message RespCustomerInfo{
+    string code = 1;
+    string msg = 2;
+    repeated CustomerInfoVo data = 3;
+}
+message CustomerInfoVo{
+    int64 customerId = 1;      // 客户id
+    string customerName = 2;   // 客户名
+}
+
+/////////////////////////////////base message//////////////////////////////////////
+//客户列表信息
+message CustomerMsg{
+    //客户名称
+    string customerName = 1;
+    ///客户类型
+    int32 customerType = 2;
+    //学段
+    string stageType = 3;
+    //状态
+    int32 status = 4;
+    //下辖学校
+    string deirectlyUnderSchool = 5;
+    //下辖教育局
+    string deirectlyUnderEducationGroup = 6;
+    //业务信息
+    repeated BusinessListMsg businessListMsg = 7;
+    //班级数量
+    int32 totalClassNum = 8;
+    //学生数量
+    int32 totalStudentNum = 9;
+    //教职工数量
+    int32 totalTeacherNum = 10;
+    //家长数量
+    int32 totalParentNum = 11;
+    //客户id
+    int64 customerId = 12;
+    //上级客户信息
+    repeated CustomerNumDetailMsg pCustomerInfo = 13;
+    //下级学校信息
+    repeated CustomerNumDetailMsg underLingSchoolInfo = 14;
+    //学制
+    int32 schoolingLengthId = 16;
+}
+
+
+//业务信息
+message BusinessMsg{
+    //业务id
+    int32 businessId = 1;
+    //业务名称
+    string businessName = 2;
+    //    //设备数量
+    //    string num = 3;
+    //数据状态
+    int32 status = 4;
+}
+//组织机构
+message OrganiMsg{
+    //组织机构id
+    int64 organiId = 1;
+    //组织机构名称
+    string organiName = 2;
+    //组织机构父id
+    int64 parentOrganiId = 3;
+
+    repeated OrganiManagerInfoMsg organiManagerInfoMsg = 4;
+}
+//学校信息
+message SchoolMsg{
+    //学校id
+    int64 id = 1 ;
+    //学校名称
+    string name = 2 ;
+    //客户类型
+    int32 customerType = 3 ;
+    //所属客户信息
+    repeated SuperiorCustomerInfo superiorCustomerInfo = 4;
+}
+//所属客户信息
+message SuperiorCustomerInfo{
+    //所属客户id
+    int64 superiorId = 1;
+    //所属客户名称
+    string superiorName = 2;
+    //所属客户类型 1伟东公司 2学校 3教育集团 4教育局
+    int32 customerType = 3;
+}
+//客户数量(客户数量,学校数量,学校id数组)
+message CustomerNumMsg{
+    //客户数量
+    int32 customerNum = 1;
+    //学校数量
+    int32 schoolNum = 2;
+    //学校id数组
+    repeated int64 schoolId = 3;
+}
+//学校id列表
+message UpdateSchoolRelationMsg{
+    //学校id
+    int64 schoolId = 1;
+    //运营经理id
+    string newOperationManagerId = 2;
+}
+//通用配置
+message CommonConfig{
+    //类型id
+    int32 typeId = 1;
+    //类型名称
+    string typeName = 2;
+    //类别id
+    int32 categoryId = 3;
+    //类别名称
+    string categoryName = 4;
+}
+//上级客户信息和下属学校信息数量等
+message CustomerNumDetailMsg{
+    //客户id
+    int64 customerId = 1;
+    //客户名称
+    string customerName = 2;
+    //客户类型
+    int32 customerType = 3;
+    //数量
+    int32 num = 4;
+}
+
+///////////////////////////////////request message////////////////////////////////////
+//客户列表查询
+message RequestCustomerSearch {
+    //关键字
+    string keyWord = 1;
+    //客户类型
+    int32 customerType = 2;
+    //业务id
+    int32 businessId = 3;
+    //状态
+    int32 status = 4;
+    //客户id  查询下属学校
+    int64 customerId = 5;
+    // 第几页
+    int32 pageNo = 6;
+    // 每页的结果数
+    int32 pageSize = 7;
+}
+//新增客户列表
+message RequestCustomerInsert {
+    //客户名称
+    string customerName = 1;
+    //客户类型
+    int32 customerType = 2;
+    //学段配置id  多个id用逗号隔开
+    string stageType = 3;
+    //街道（镇）名称
+    string streetName = 4;
+    //行政地址id  区/县
+    string addressId = 5;
+    //logo地址
+    string logo = 6;
+    //销售经理id
+    string salesManagerId = 7;
+    //运营经理id
+    string operationManagerId = 8;
+    //客户负责人姓名
+    string customerOfficerName = 9;
+    //客户负责人手机
+    string customerOfficerMobile = 10;
+    //客户联系人姓名
+    string customerLinkmanName = 11;
+    //客户联系人电话
+    string customerLinkmanMobile = 12;
+    //学制配置id
+    int32 schoolingLengthId = 13;
+    //备注
+    string comment = 14;
+    //账号状态
+    int32 status = 15;
+}
+//更新客户列表
+message  RequestCustomerUpdate{
+    //客户名称
+    string customerName = 1;
+    //客户类型
+    int32 customerType = 2;
+    //学段配置id  多个id用逗号隔开
+    string stageType = 3;
+    //街道（镇）名称
+    string streetName = 4;
+    //行政地址id  区/县
+    string addressId = 5;
+    //logo地址
+    string logo = 6;
+    //销售经理id
+    string salesManagerId = 7;
+    //运营经理id
+    string operationManagerId = 8;
+    //客户负责人姓名
+    string customerOfficerName = 9;
+    //客户负责人手机
+    string customerOfficerMobile = 10;
+    //客户联系人姓名
+    string customerLinkmanName = 11;
+    //客户联系人电话
+    string customerLinkmanMobile = 12;
+    //学制配置id
+    int32 schoolingLengthId = 13;
+    //备注
+    string comment = 14;
+    //客户id
+    int64 id = 15;
+    //账号状态
+    int32 status = 16;
+}
+//删除客户
+message RequestCustomerDelete {
+    int64 id = 1;
+}
+//业务管理查询
+message RequestListBusinessInfo {
+    int64 customerId = 1;
+    // 第几页
+    int32 pageNo = 5;
+    // 每页的结果数
+    int32 pageSize = 6;
+}
+//根据客户id更新业务状态
+message RequestUpdateBusiness {
+    //客户id
+    int64 customerId = 1;
+    //业务id
+    int32 businessId = 2;
+    //1 开  2关
+    int32 status = 3;
+}
+//删除组织机构
+message RequestDeleteOrgani {
+    int64 id = 1;
+}
+//更新组织机构
+message RequestUpdateOrgani {
+    int64 id = 1;
+    string name = 2;
+    int64 pId = 3;
+    repeated OrganiManagerInfoMsg managerInfoMsg = 4;
+}
+//新增组织机构
+message RequestInsertOrgani {
+    //名称
+    string name = 1;
+    //父组织id
+    int64 pId = 2;
+    //组织机构管理员信息
+    repeated OrganiManagerInfoMsg managerInfoMsg = 3;
+}
+//组织机构列表查询
+message RequestListOrgani {
+    //组织机构id
+    int64 organiId = 2;
+    // 第几页
+    int32 pageNo = 5;
+    // 每页的结果数
+    int32 pageSize = 6;
+}
+//查询组织机构
+message RequestSearchOrgani {
+    //1 搜索  2 选择
+    int32 rule = 1;
+    //关键字
+    string keyword = 2;
+}
+//新增下属学校
+message RequestAddUnderLingSchool{
+    //客户id
+    int64 customerId = 1;
+    //下属学校id
+    int64 underLingId = 2 ;
+
+}
+//删除下属学校
+message RequestDeleteUnderLingSchool{
+    //客户id
+    int64 customerId = 1 ;
+    //下属id
+    int64 underLingId = 3 ;
+}
+//查询下属学校列表
+message RequestListSchool{
+    //任意值 建议0
+    string code = 1;
+}
+//根据运营经理id查出他的客户数量,学校数量,学校id数组
+message RequestSelectCustomerNumByIdParam{
+    //运营经理id
+    string operationManagerId = 1;
+}
+//根据运营经理id 查询他所负责的所有学校名称及所属客户名称
+message RequestListSchoolByIdParam{
+    //运营经理id
+    string operationManagerId = 1;
+}
+//根据运营经理id，多个学校id修改学校和运营经理的绑定关系
+message RequestUpdateRelationByIdParam{
+    //运营经理id
+    string operationManagerId = 1;
+    //学校id
+    repeated UpdateSchoolRelationMsg updateSchoolRelationMsg = 2;
+}
+//查询客户信息
+message RequestSelectCustomerInfo{
+    //客户id
+    string customerId = 1;
+}
+//根据客户类型查询客户列表
+message RequestListCustomerByCustomerType{
+    //客户类型  1伟东公司 2学校 3教育集团 4教育局 5所有客户
+    int32 customerType = 1;
+}
+message RequestCustomerEdit{
+    //客户id
+    int64 customerId = 1;
+}
+message RequestEditOrgani{
+    //组织机构id
+    int64 organiId = 1;
+}
+message RequestCommonConfig{
+    //类别id  1、客户类别 2、区域类别 3、区域等级 4、业务类别
+    int32 categoryId = 1;
+}
+message RequestListUnderLingSchoolAllInfo{
+    //客户id
+    int64 customerId = 1;
+}
+message RequestFuzzyQueryCustomer{
+    //关键字
+    string keyWord = 1;
+    //客户id
+    int64 customerId = 2;
+    //客户类型
+    int32 customerType =3;
+}
+message RequestListPcustomer{
+    //客户id
+    int64 customerId = 1;
+}
+message RequestListUnderLingSchool{
+    //客户id
+    int64 customerId = 1;
+}
+//上级客户信息  下属学校数量信息
+message CustomerNumDetailList {
+    repeated CustomerNumDetailMsg customerNumDetailMsg = 1;
+}
+///////////////////////////////////response message////////////////////////////////////
+message BooleanReply {
+    //操作标识（0000成功 9999失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+}
+//客户列表
+message CustomerListMsg {
+    //客户列表信息
+    repeated CustomerMsg customerMsg = 1;
+}
+//业务信息
+message BusinessListMsg{
+    //业务信息
+    repeated BusinessMsg businessMsg = 1;
+}
+//组织机构列表
+message OrganiListMsg{
+    //组织机构id
+    repeated OrganiMsg organiMsg = 1;
+}
+//组织机构管理员
+message OrganiManagerInfoMsg{
+    //管理员id
+    string managerId = 1;
+    //管理员名称
+    string managerName = 2;
+}
+//学校列表
+message SchoolListMsg{
+    repeated SchoolMsg schoolMsg =1 ;
+}
+//根据运营id等返回客户数量等信息
+message ResponseSelectCustomerNumByIdParam{
+    //客户数量
+    int32 customerNum = 1;
+    //学校数量
+    int32 schoolNum = 2;
+    //学校id列表
+    repeated int32 schoolId = 3;
+}
+//根据运营id等返回所有学校等信息
+message ResponseListSchoolByIdParam{
+    //学校信息
+    repeated SchoolMsg schoolMsg = 1;
+}
+//客户信息
+message ResponseSelectCustomerInfo{
+    //客户id
+    int64 customerId = 1;
+    //客户名称
+    string customerName = 2;
+    //所属客户信息
+    repeated SuperiorCustomerAllInfo superiorCustomerAllInfo = 3;
+
+}
+//所属客户所有的信息
+message SuperiorCustomerAllInfo{
+    //所属客户id
+    int64 superiorId = 1;
+    //所属客户名称
+    string superiorName = 2;
+    //所属客户类型 1伟东公司 2学校 3教育集团 4教育局
+    int32 customerType = 3;
+    //客户下属学校数量
+    int32 underlingSchoolNum = 4;
+    //客户下属学校列表
+    repeated SchoolMsg SchoolMsg = 5;
+}
+//客户信息编辑
+message ResponseCustomerEdit{
+    //客户id
+    int64 customerId = 1;
+    //客户类型
+    int32 customerType = 2;
+    //学段配置id  多个id用逗号隔开
+    string stageType = 3;
+    //客户名称
+    string customerName = 4;
+    //行政地址id  区/县
+    string addressId = 5;
+    //街道（镇）名称
+    string streetName = 6;
+    //账号状态
+    int32 status = 7;
+    //销售经理id
+    string salesManagerId = 8;
+    //运营经理id
+    string operationManagerId = 9;
+    //客户负责人姓名
+    string customerOfficerName = 10;
+    //客户负责人手机
+    string customerOfficerMobile = 11;
+    //客户联系人姓名
+    string customerLinkmanName = 12;
+    //客户联系人电话
+    string customerLinkmanMobile = 13;
+    //logo地址
+    string logo = 14;
+    //学制配置id
+    int32 schoolingLengthId = 15;
+    //备注
+    string comment = 16;
+
+
+
+}
+//组织机构信息编辑
+message ResponseOrganiEdit{
+    //组织机构id
+    int64 id = 1;
+    //组织机构名称
+    string organiName = 2;
+    //组织机构上级id
+    int64 parentOrganiId = 3;
+    //组织机构管理员信息
+    repeated OrganiManagerInfoMsg organiManagerInfoMsg = 4;
+
+}
+//通用配置列表
+message CommonConfigList{
+    //通用配置信息
+    repeated CommonConfig commonConfig = 1;
+}

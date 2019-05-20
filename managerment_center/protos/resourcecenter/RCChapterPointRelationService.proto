@@ -1,0 +1,34 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.edition"; //所在包名
+option java_outer_classname = "RCChapterPointRelationServiceProto"; //最外层类名称
+import "RCCommon.proto";
+import "google/protobuf/wrappers.proto";
+
+//定义服务
+service RCChapterPointRelationService {
+    //根据章节查询知识点(结果message CPRelation)
+    rpc listRelationsByChapterId (google.protobuf.Int32Value) returns (ListResp) {
+    }
+    //新建章节与知识点的关联
+    rpc createRelation (CPRelationCreateReq) returns (EmptyResp) {
+    }
+    //删除章节与知识点的关联
+    rpc deleteRelation (CPRelation) returns (EmptyResp) {
+    }
+}
+
+message CPRelationCreateReq {
+    repeated CPRelation values = 1;
+}
+
+message CPRelation {
+    //章节id
+    int32 chapterId = 1;
+    //知识点id
+    int32 pointId = 2;
+    //知识点名称
+    string pointName = 3;
+}

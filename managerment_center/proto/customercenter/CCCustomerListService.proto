@@ -1,0 +1,155 @@
+syntax = "proto3";
+package customercenter;
+//option java_multiple_files = true;
+//option java_package = "com.szwdcloud.customercenter.proto.customercenter";
+//option java_outer_classname = "CCCustomerListServiceProto";
+import public "../Common.proto";
+/////////////////////////////////service//////////////////////////////////////
+service CustomerService {
+    // 根据条件返回客户信息
+    rpc searchCustomer (RequestCustomerSearch) returns (CustomerList) {}
+    rpc insertCustomer (CustomerVo) returns (BooleanReply){}
+    rpc updateCustomer (CustomerVo) returns (BooleanReply){}
+    rpc deleteCustomer (CustomerVo) returns (BooleanReply){}
+    rpc listBusinessInfoByCustomerId (RequestListBusinessInfo) returns (BusinessList){}
+    rpc updateBusinessStatus (RequestupdateBusiness) returns (BooleanReply){}
+    rpc listSchoolingLength (RequestBMSubjectSchoolingLength) returns (BMSubjectResponseSchoolingLengthList){}
+
+}
+/////////////////////////////////base message//////////////////////////////////////
+//客户列表
+message CustomerList {
+    //客户列表信息
+    repeated CustomerListVo customerListVo = 1;
+
+}
+
+//客户列表信息
+message CustomerListVo{
+    //客户名称
+    string customerName = 1;
+    ///客户类型
+    string customerType = 2;
+    //学段
+    string stageType = 3;
+    //状态
+    string dataStatus = 4;
+    //下辖学校
+    string deirectlyUnderSchool = 5;
+    //下辖教育局
+    string deirectlyUnderEducationGroup = 6;
+    //业务信息
+    repeated BusinessList businessList = 7;
+
+}
+
+//业务信息
+message BusinessList{
+    //业务信息
+    repeated BusinessVo businessVo = 1;
+}
+
+//业务信息
+message BusinessVo{
+    //业务id
+    string businessId = 1;
+    //业务名称
+    string businessName = 2;
+//    //设备数量
+//    string num = 3;
+    //数据状态
+    string status = 4;
+    //类别
+    string categoryName = 5;
+    //类型名称
+    string typeName = 6;
+}
+
+
+
+///////////////////////////////////request message////////////////////////////////////
+message RequestCustomerSearch {
+    //关键字
+    string keyWord = 1;
+    //客户类型
+    string customerType = 2;
+    //业务id
+    string businessId = 3;
+    //状态
+    string dataStatus = 4;
+//    //区域id
+//    string AreaId = 5;
+
+    int32 page_number = 6;  // 第几页
+
+    int32 result_per_page = 7;  // 每页的结果数
+}
+
+message RequestListBusinessInfo {
+    string customerId = 1;
+}
+
+
+message RequestupdateBusiness {
+    string businessId = 1;
+    string status = 2;
+}
+///////////////////////webview request////////////////////////////////////////////////////
+
+///////////////////////////////////response message////////////////////////////////////
+//message ResponseCustomerSearch {
+//    //操作标识（0成功 1失败）
+//    string code = 1;
+//    //操作结果
+//    string msg = 2;
+//    message Datas {
+//        repeated CustomerSearchResult customerSearchResult = 1;
+//    }
+//    Datas datas = 3;
+//}
+
+
+//客户信息
+message CustomerVo {
+
+    string id = 1;
+    string customerName = 2;
+    string customerType = 3;
+    string stageType = 4;
+    string organizationId = 5;
+    string logo = 6;
+    string salesManagerId = 7;
+    string salesManagerName = 8;
+    string operationManagerId = 9;
+    string customerOfficerName = 10;
+    string customerOfficerMobile = 11;
+    string customerLinkmanName = 12;
+    string customerLinkmanMobile = 13;
+    string schoolingLengthId = 14;
+    string dataStatus = 15;
+    string status = 16;
+    string superiorId = 17;
+    string superiorType = 18;
+    string customerManagerId = 19;
+    string streetName = 20;
+    string comment = 21;
+    string addressId = 22;
+
+}
+
+message BooleanReply {
+    //操作标识（0000成功 9999失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+}
+
+
+
+message Response {
+    //操作标识（0000成功 9999失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+}
+

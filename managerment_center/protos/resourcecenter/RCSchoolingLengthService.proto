@@ -1,0 +1,41 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.schoolinglength"; //编译后生成的包名
+option java_outer_classname = "RCSchoolinglengthServiceProto"; //最外层类名称
+
+import "RCCommon.proto";
+
+
+// 学制
+service RCSchoolinglengthService {
+
+    //  获取学制
+    rpc listSchoolingLength (RequestSchoolingLength) returns (ResponseSchoolingLengthList) {}
+}
+
+
+message RequestSchoolingLength {
+    int32 id = 1;  //  根据学制id查询,非必填
+}
+
+message SchoolingLength {
+    //学制id
+    int32 id = 1;
+    //学制编码
+    string code = 2;
+    //学制名称
+    string schoolingLengthName = 3;
+    //  学制覆盖的年级,多个以,隔开------格式为   1,2,3,4
+    string gradeId = 4;
+}
+
+// 学制列表数据
+message ResponseSchoolingLengthList {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    repeated SchoolingLength datas = 3;
+}

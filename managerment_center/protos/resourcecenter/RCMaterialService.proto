@@ -1,0 +1,203 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.material"; //所在包名
+option java_outer_classname = "RCMaterialServiceProto"; //最外层类名称
+
+import "RCCommon.proto";
+
+//素材服务
+service RCMaterialService {
+    //新建素材(内部Any类型封装的是String id)
+    rpc createMaterial (ModifyMaterial) returns (SingleResp) {
+    }
+    //查询素材
+    rpc listMaterial (ListMaterialsRequest) returns (BatchMaterialPageResp) {
+    }
+    //根据类别查询素材
+    rpc listMaterialByCategory (GetMaterialByCategoryRequest) returns (BatchMaterialsResp) {
+    }
+    //根据id查询素材(内部Any类型封装的是MaterialView)
+    rpc getMaterialById (GetMaterialByIdRequest) returns (SingleResp) {
+    }
+    //根据包查询素材
+    rpc listMaterialByPackage (GetMaterialByPackageRequest) returns (BatchMaterialsResp) {
+    }
+    //修改素材
+    rpc updateMaterial (ModifyMaterial) returns (EmptyResp) {
+    }
+    //修改素材精品
+    rpc updateBoutiqueMaterial (UpdateMaterialBoutiqueRequest) returns (EmptyResp) {
+    }
+    //=================素材类别=================
+    //查询素材类别
+    rpc listCategory (listMaterialRequest) returns (BatchMaterialsCategoryResp) {
+    }
+}
+
+//素材显示内容
+message MaterialView {
+    string id = 1;
+    string name = 2; //素材名称
+    string teacherId = 3; //教师id
+    string teacherName = 4; //教师名称
+    int32 createType = 5; //创建来源:1,第三方引入，2,平台自建，3,老师自建'
+    string url = 6; //地址
+    int32 size = 7; //文件大小
+    int32 categoryId = 8; //素材类别  1视频 2音频 3教案 4PPT  5学案 6图片 7包 8文本 7其他
+    int64 customerId = 9; //客户id（分库分表用，默认伟东id）
+    string customerName = 10; //客户名称（分库分表用，默认伟东id）
+    int32 subjectId = 11; //科目id
+    string subjectName = 12; //科目名称
+    int32 chapterId = 13; //章节id
+    string chapterName = 14; //章节名称
+    repeated int32 pointId = 15; //知识点id列表
+    repeated string pointName = 16; //知识点名称列表
+    int32 isBoutique = 17; //是否精品
+    string createTime = 18;
+    int32 editionId = 19; //教材id
+    string editionName = 20; //教材名称
+    int32 gradeId = 21; //年级id
+    string gradeName = 22; //年级名称
+    int32 fascicle = 23; //上下册id
+    string fascicleName = 24; //上下册名称
+    int32 editionVersionId = 25; //  教材版本id,
+    string updateTime = 26; //更新时间
+    string parentId = 27; //包id
+    //总使用次数 add by jiayb 2019/5/8
+    int32 totalUseCount = 28;
+    //今日使用次数 add by jiayb 2019/5/8
+    int32 todayUseCount = 29;
+    //总上课次数 add by jiayb 2019/5/8
+    int32 totalClassCount = 30;
+    //今日上课次数 add by jiayb 2019/5/8
+    int32 todayClassCount = 31;
+}
+//素材关联知识点
+message MaterialRelaPointPo{
+    string materialId = 1;//素材id
+    int32 pointId = 2;//知识点id
+    int64 customerId = 3;//客户id（分库分表用，默认伟东id）
+    int32 subjectId = 4;//科目id
+    string createTime = 5;
+}
+
+//素材类别
+message MaterialCategory{
+    int32 id = 1;//素材id
+    string name = 2;//素材名称
+}
+//================================Request====================================
+//新增、修改素材（新增时所有必填；修改时地址和文件大小不填，其他必填；另外教材、章节和知识点其中一个必填）
+message ModifyMaterial{
+    string id = 1;
+    string name = 2; //素材名称
+    string teacherId = 3; //教师id
+    int32 createType = 4; //创建来源:1,第三方引入，2,平台自建，3,老师自建'
+    string url = 5; //地址
+    int32 size = 6; //文件大小
+    int32 categoryId = 7; //素材类别  1视频 2音频 3word 4PPT  5ZIP 6图片 7包 8文本 7其他
+    int64 customerId = 8; //客户id（分库分表用，默认伟东id）
+    int32 subjectId = 9; //科目id
+    int32 chapterId = 10; //章节id
+    repeated int32 pointId = 11; //知识点id列表
+    int32 fascicle = 12;  //上下册id(只传输知识点时必填，其他情况下不填)
+    int32 editionId = 13;  //教材id
+}
+//请求更新素材精品（所有必填）
+message UpdateMaterialBoutiqueRequest{
+    string id = 1;//素材id
+    int32 isBoutique = 2;//是否精品
+    int32 subjectId = 3; //科目id
+    int64 customerId = 4; //客户id（分库分表用，默认伟东id）
+}
+//请求根据id获取单个素材（所有必填）
+message GetMaterialByIdRequest{
+    string id = 1;//素材id
+    int32 subjectId = 2; //科目id
+    int64 customerId = 3; //客户id（分库分表用，默认伟东id）
+}
+//请求根据类别获取素材（前3个必填，其他选填）
+message GetMaterialByCategoryRequest{
+    repeated int32 categoryIds = 1; //素材类别列表  1视频 2音频 3教案 4PPT  5学案 6图片 7包 8文本 7其他
+    int32 subjectId = 2; //科目id
+    int64 customerId = 3; //客户id（分库分表用，默认伟东id）
+    string searchContent = 4; //模糊搜索内容(标题和知识点)
+    int32 isBoutique = 5;//是否精品
+}
+//请求根据包获取子素材（所有必填）
+message GetMaterialByPackageRequest{
+    string id = 1;//素材id
+    int32 subjectId = 2; //科目id
+    int64 customerId = 3; //客户id（分库分表用，默认伟东id）
+}
+//请求搜索素材（对应素材搜索、素材管理；pageNo和pageSize必填，其他根据实际情况选填）
+message ListMaterialsRequest{
+    string name = 1; //素材名称
+    string teacherId = 2; //教师id
+    int32 createType = 3; //创建来源:1,第三方引入，2,平台自建，3,老师自建'
+    string url = 4; //地址
+    int32 size = 5; //文件大小
+    repeated int32 categoryId = 6; //素材类别  1视频 2音频 3教案 4PPT  5学案 6图片 7包 8文本 7其他  10 全部
+    int64 customerId = 7; //客户id（分库分表用，默认伟东id）
+    int32 subjectId = 8; //科目id
+    int32 editionId = 9;  //教材id
+    string chapterId = 10; //章节id,多个用,隔开
+    int32 pointId = 11; //知识点id
+    int32 gradeId = 12; //年级id
+    int32 fascicle = 13;  //上下册id
+    int32 materialUsageStatistic = 14;  //引用次数统计配置 0不参与统计 1升序 2降序
+    int32 updateTimeStatistic = 15; //更新时间统计配置 0不参与统计 1升序 2降序
+    string searchContent = 16; //模糊搜索内容(标题和知识点)
+    int32 isBoutique = 17;//是否精品
+    //当前页
+    int32 pageNo = 18;
+    //每页数量
+    int32 pageSize = 19;
+}
+
+//请求获取素材列表
+message listMaterialRequest{
+}
+//================================Response====================================
+message MaterialPageResp {
+    //当前页
+    int32 pageNo = 1;
+    //每页数量
+    int32 pageSize = 2;
+    //总页数
+    int32 pages = 3;
+    //总记录数
+    int64 total = 4;
+    //结果数据
+    repeated MaterialView materialViews = 5;
+}
+//分页返回多个素材
+message BatchMaterialPageResp{
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //结果数据
+    MaterialPageResp datas = 3;
+}
+//返回多个素材
+message BatchMaterialsResp{
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //结果数据
+    repeated MaterialView datas = 3;
+}
+
+//返回素材类别
+message BatchMaterialsCategoryResp{
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //结果信息
+    string msg = 2;
+    //结果数据
+    repeated MaterialCategory datas = 3;
+}

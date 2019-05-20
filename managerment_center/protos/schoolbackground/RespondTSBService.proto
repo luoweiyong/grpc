@@ -1,0 +1,223 @@
+syntax = "proto3";
+package operating.platform;
+option java_multiple_files = true;
+option java_package = "com.wd.proto.service.operating_platform";
+option java_outer_classname = "RespondTSBServiceProto";
+
+import "SBCommonRequest.proto";
+
+// 响应学校后台请求
+service RespondTSBService {
+    // 登录
+    rpc login (RequestLoginTOP) returns (RespondLoginTSB) {}
+    // 根据学校返回年级列表
+    rpc listSchoolGradeBySchoolId (RequestSchoolGradeTOP) returns (RespondSchoolGradeTSB) {}
+    // 根据学校返回学制列表
+    rpc listSchoolingLengthBySchoolId (RequestSchoolingLengthTOP) returns (RespondSchoolingLengthTSB) {}
+    // 根据学制返回学制年级列表
+    rpc listSchoolingLengthSchoolGradeBySchoolId (RequestSchoolingLengthSchoolGradeTOP) returns (RespondSchoolingLengthSchoolGradeTSB) {}
+    // 根据学校id返回科目列表
+    rpc listSubjectBySchoolId (RequestSubjectTOP) returns (RespondSubjectTSB) {}
+    // 根据科目id获取科目年级列表
+    rpc listSubjectSchoolGradeBySubjectId (RequestSubjectSchoolGradeTOP) returns (RespondSubjectSchoolGradeTSB) {}
+    // 根据年级id返回年级科目列表
+    rpc listSchoolGradeSubjectById (RequestSchoolGradeSubjectTOP) returns (RespondSchoolGradeSubjectTSB) {}
+    // 返回出版社列表
+    rpc listPress (RequestPressTOP) returns (RespondPressTSB) {}
+    // 根据年级科目出版社返回教材列表
+    rpc listEditionBySchoolGradeSubjectPressId (RequestEditionTOP) returns (RespondEditionTSB) {}
+    // 返回客户角色列表
+    rpc listCustomerRole (RequestCustomerRoleTOP) returns (RespondCustomerRoleTSB) {}
+}
+
+//登录请求信息
+message RequestLoginTOP {
+    //用户id
+    string userId = 1;
+    //时间戳
+    string token = 2;
+    //密码
+    string password = 3;
+    //登录分类
+    int32 loginType = 4;
+    //登录来源
+    int32 loginSource = 5;
+}
+
+//返回登录用户信息
+message RespondLoginTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //用户信息
+    LoginUser datas = 3;
+}
+
+//年级请求信息
+message RequestSchoolGradeTOP {
+    //学校Id
+    string schoolId = 1;
+}
+
+//返回年级信息
+message RespondSchoolGradeTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //年级信息
+    message Datas {
+        repeated SchoolGrade schoolGrades = 3;
+    }
+    Datas datas = 3;
+}
+
+//学制请求信息
+message RequestSchoolingLengthTOP {
+    //学校Id
+    string schoolId = 1;
+}
+
+//返回学制信息
+message RespondSchoolingLengthTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //学制信息
+    SchoolingLength datas = 3;
+}
+
+//学制年级请求信息
+message RequestSchoolingLengthSchoolGradeTOP {
+    //学制Id
+    string schoolingLength  = 1;
+}
+
+//返回学制年级信息
+message RespondSchoolingLengthSchoolGradeTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //学制年级信息
+    message Datas {
+        repeated SchoolingLengthSchoolGrade schoolingLengthSchoolGrades = 3;
+    }
+    Datas datas = 3;
+}
+
+//科目请求信息
+message RequestSubjectTOP {
+    //学校Id
+    string schoolId = 1;
+}
+
+//返回科目信息
+message RespondSubjectTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //科目信息
+    message Datas {
+        repeated Subject subjects = 3;
+    }
+    Datas datas = 3;
+}
+
+//科目年级请求信息
+message RequestSubjectSchoolGradeTOP {
+    //科目Id
+    string id = 1;
+}
+
+//返回科目年级信息
+message RespondSubjectSchoolGradeTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //科目年级信息
+    message Datas {
+        repeated SubjectSchoolGrade subjectSchoolGrades = 3;
+    }
+    Datas datas = 3;
+}
+
+//年级科目请求信息
+message RequestSchoolGradeSubjectTOP {
+    //年级Id
+    string id = 1;
+}
+
+//返回年级科目信息
+message RespondSchoolGradeSubjectTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //年级科目信息
+    message Datas {
+        repeated SchoolGradeSubject schoolGradeSubjects = 3;
+    }
+    Datas datas = 3;
+}
+
+//出版社请求信息
+message RequestPressTOP {
+
+}
+
+//返回出版社信息
+message RespondPressTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //出版社信息
+    message Datas {
+        repeated Press press = 1;
+    }
+    Datas datas = 3;
+}
+
+//年级科目出版社请求信息
+message RequestEditionTOP {
+    //年级Id
+    string schoolGradeId = 1;
+    //科目id
+    string subjectId = 2;
+    //出版社id
+    string pressId = 3;
+}
+
+//返回年级科目出版社信息
+message RespondEditionTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    //年级科目出版社信息
+    message Datas {
+        repeated Edition editions = 1;
+    }
+    Datas datas = 3;
+}
+
+//客户角色请求信息
+message RequestCustomerRoleTOP {
+}
+
+//返回客户角色信息
+message RespondCustomerRoleTSB {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    message Datas {
+        repeated CustomerRole customerRoles = 1;
+    }
+    Datas datas = 3;
+}

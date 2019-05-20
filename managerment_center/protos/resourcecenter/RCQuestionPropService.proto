@@ -1,0 +1,35 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.questionprop"; //所在包名
+option java_outer_classname = "RCQuestionPropServiceProto"; //最外层类名称
+
+import "RCCommon.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+//定义服务
+service RCQuestionPropService {
+    //根据科目查询题目类型(结果message QuestionProp)
+    rpc listStylesBySubjectId (google.protobuf.Int32Value) returns (ListResp) {   }
+    //查询能力层次(结果message QuestionProp)
+    rpc listAbility (google.protobuf.Empty) returns (ListResp) {   }
+    //查询难度系数(结果message QuestionProp)
+    rpc listHardDegree (google.protobuf.Empty) returns (ListResp) {   }
+    //查询概念题类(结果message QuestionProp)
+    rpc listConceptType (google.protobuf.Empty) returns (ListResp) {   }
+    //查询试题来源(结果message QuestionProp)
+    rpc listSource (google.protobuf.Empty) returns (ListResp) {   }
+    //查询练习题类(结果message QuestionProp)
+    rpc listExerciseType (google.protobuf.Empty) returns (ListResp) {   }
+    //  根据能力层次id查能力层次信息(结果message QuestionProp)
+    rpc getAbilityById (google.protobuf.Int32Value) returns (SingleResp){}
+}
+
+message QuestionProp {
+    //id
+    int32 id = 1;
+    //属性名称
+    string name = 2;
+}

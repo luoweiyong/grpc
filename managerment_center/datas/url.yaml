@@ -1,0 +1,13 @@
+environments:
+    dev:
+        HOST: '192.168.15.191'
+        PORT: '9090'
+    test:
+        HOST: '192.168.15.191'
+        PORT: '9191'
+my:
+    servers:
+        HOST: '192.168.15.148'
+        PORT1: '9090'
+        PORT2: '9091'
+        PORT3: '9093'

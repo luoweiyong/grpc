@@ -1,0 +1,44 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.review"; //所在包名
+option java_outer_classname = "RCReviewServiceProto"; //最外层类名称
+
+import "RCCommon.proto";
+import "google/protobuf/wrappers.proto";
+
+service RCReviewService{
+    //提交审核
+    rpc submitResource (Resource2ReviewReq) returns (EmptyResp) { }
+    //审核资源
+    rpc reviewResource (ReviewResourceReq) returns (EmptyResp) { }
+}
+
+message Resource2ReviewReq{
+    //主键id
+    string id = 1;
+    //资源类型 1:试题,2:素材,3:课件
+    int32 resourceType = 2;
+    //科目id
+    int32 subjectId = 3;
+    //客户id
+    int64 customerId = 4;
+}
+
+message ReviewResourceReq{
+    //主键id
+    string id = 1;
+    //资源类型 1:试题,2:素材,3:课件
+    int32 resourceType = 2;
+    //科目id
+    int32 subjectId = 3;
+    //客户id
+    int64 customerId = 4;
+    //审核人
+    string userId = 5;
+    //备注(非必填)
+    string remark = 6;
+    //审核状态码
+    int32 reviewStatus = 7;
+}

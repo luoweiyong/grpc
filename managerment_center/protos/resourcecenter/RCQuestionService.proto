@@ -1,0 +1,304 @@
+//指定proto3格式
+syntax = "proto3";
+package resourcecenter;
+option java_multiple_files = true; //以外部类模式生成
+option java_package = "com.szwdcloud.resource.question"; //所在包名
+option java_outer_classname = "RCQuestionServiceProto"; //最外层类名称
+
+import "RCCommon.proto";
+import "google/protobuf/wrappers.proto";
+
+//定义服务
+service RCQuestionService {
+    //新建题(结果message StringValue)
+    rpc createQuestion (QuestionReq) returns (SingleResp) {
+    }
+    //更新题
+    rpc updateQuestion (QuestionReq) returns (EmptyResp) {
+    }
+    //删除题
+    rpc deleteQuestion (SingleQuestionReq) returns (EmptyResp) {
+    }
+    //根据id查询题(结果message QuestionDetail)
+    rpc querySingleQuestion (SingleQuestionReq) returns (SingleResp) {
+    }
+    //分页查询(结果message Question4List)
+    rpc queryPageQuestion (PageQuestionReq) returns (PageResp) {
+    }
+    //查询待审核/审核通过/不通过列表(结果message Question4List)
+    rpc queryReviewQuestion (ReviewQuestionPageReq) returns (PageResp) {
+    }
+    //查询我建的题/我的分享(结果message Question4List)
+    rpc queryMyQuestion (MyQuestionReq) returns (PageResp) {
+    }
+}
+
+message SingleQuestionReq {
+    //主键id
+    string id = 1;
+    //科目id(非必填)
+    int32 subjectId = 2;
+}
+
+message QuestionReq {
+    //主键id(新建非必填，修改必填)
+    string id = 1;
+    //科目id
+    int32 subjectId = 2;
+    //题型id
+    int32 style = 3;
+    //难度系数id(非必填)
+    int32 difficulty = 4;
+    //父题目id(非必填)
+    string parentId = 5;
+    //子题目序号(非必填)
+    int32 seq = 6;
+    //题类标签
+    int32 labelType = 7;
+    //知识点
+    repeated int32 pointId = 8;
+    //能力层次(非必填) edit by cjy 2019/5/5
+    repeated int32 abilityId = 9;
+    //概念题类id(非必填) edit by cjy 2019/5/7
+    int32 conceptTypeId = 10;
+    //概念教学目标(非必填)
+    string conceptTarget = 11;
+    //创建者
+    string creatorId = 12;
+    //客户id
+    int64 customerId = 13;
+    //原客户id
+    int64 originalCustomerId = 14;
+    //年级id
+    int32 gradeId = 15;
+    //章节id
+    repeated int32 chapterId = 16;
+    //创建来源
+    int32 createType = 17;
+    //引用题id(非必填)
+    string refQuestionId = 18;
+    //题干
+    string body = 19;
+    //答案
+    string answer = 20;
+    //选项
+    string selection = 21;
+    //错误类型
+    string errorType = 22;
+    //错误原因
+    string errorAnalysis = 23;
+    //考题出处(非必填)
+    string label = 24;
+    //解析
+    string analyse = 25;
+    //真题次数(非必填)
+    int32 realCount = 26;
+    //试题来源(非必填)
+    int32 sourceId = 27;
+    //练习题类：1常考题，2易错题，3好题，4压轴题(非必填)
+    int32 questionCategory = 28;
+    //解答(非必填)
+    string method = 29;
+    //点评(非必填)
+    string discuss = 30;
+    //审核状态
+    int32 reviewStatus = 31;
+    //主题
+    string topics = 32;
+    //批次号（导入用）
+    string batchNo = 33;
+}
+
+message PageQuestionReq {
+    //当前页
+    int32 pageNo = 1;
+    //每页数量
+    int32 pageSize = 2;
+    //科目id
+    int32 subjectId = 3;
+    //客户id
+    int64 customerId = 4;
+    //题类标签
+    int32 labelType = 5;
+    //年级id
+    int32 gradeId = 6;
+    //章节id edit by cjy 2019/5/6
+    repeated int32 chapterSet = 7;
+    //知识点 edit by cjy 2019/5/6
+    repeated int32 pointSet = 8;
+    //题型id
+    int32 style = 9;
+    //能力层次
+    int32 abilityId = 10;
+    //概念题类id
+    int32 conceptTypeId = 11;
+    //练习题类id
+    int32 questionCategory = 12;
+    //难度系数id
+    int32 hardDegreeId = 13;
+    //来源
+    int32 sourceId = 14;
+    //更新时间排序1-升序 2-降序
+    int32 timeOrder = 15;
+}
+
+message ReviewQuestionPageReq {
+    //当前页
+    int32 pageNo = 1;
+    //每页数量
+    int32 pageSize = 2;
+    //审核状态
+    int32 reviewStatus = 3;
+    //审核人
+    string userId = 4;
+    //教材版本
+    int32 editionVersionId = 5;
+    //年级
+    int32 gradeId = 6;
+    //上下学期
+    int32 fascicleId = 7;
+    //科目id
+    int32 subjectId = 8;
+}
+
+message MyQuestionReq {
+    //当前页
+    int32 pageNo = 1;
+    //每页数量
+    int32 pageSize = 2;
+    //客户id
+    int64 customerId = 3;
+    //科目id（伟东必传）
+    int32 subjectId = 4;
+    //审核状态
+    int32 reviewStatus = 5;
+    //题类标签 1-概念测试题 2-练习题
+    int32 labelType = 6;
+    //创建者id
+    string creatorId = 7;
+    //开始时间
+    string startDate = 8;
+    //开始时间
+    string endDate = 9;
+    //时间排序1-升序 2-降序 add by cjy 2019/5/8
+    int32 timeOrder = 10;
+
+}
+
+message Question4List {
+    //主键id
+    string id = 1;
+    //科目id
+    int32 subjectId = 2;
+    //题型id
+    int32 style = 3;
+    //题型名称
+    string styleName = 4;
+    //题干
+    string body = 5;
+    //选项
+    string selection = 6;
+    //答案
+    string answer = 7;
+    //客户id
+    int64 customerId = 8;
+    //客户名称
+    string customerName = 9;
+    //创建者id
+    string creatorId = 10;
+    //创建者名称
+    string creatorName = 11;
+    //创建时间
+    string createTime = 12;
+    //更新时间
+    string updateTime = 13;
+    //难度系数名称
+    string difficultyName = 14;
+    //真题次数
+    int32 realCount = 15;
+    //总使用次数 add by cjy 2019/5/8
+    int32 totalUseCount = 16;
+    //今日使用次数 add by cjy 2019/5/8
+    int32 todayUseCount = 17;
+    //总上课次数 add by cjy 2019/5/8
+    int32 totalClassCount = 18;
+    //今日上课次数 add by cjy 2019/5/8
+    int32 todayClassCount = 19;
+}
+
+message QuestionDetail {
+    //主键id
+    string id = 1;
+    //科目id
+    int32 subjectId = 2;
+    //科目名称
+    string subjectName = 3;
+    //题型id
+    int32 style = 4;
+    //题型名称
+    string styleName = 5;
+    ////难度系数id
+    int32 difficulty = 6;
+    ////难度系数名称
+    string difficultyName = 7;
+    //父题id
+    string parentId = 8;
+    //子题序号
+    int32 seq = 9;
+    //题类标签
+    int32 labelType = 10;
+    //知识点
+    repeated int32 pointId = 11;
+    //知识点名称
+    repeated string pointName = 12;
+    //能力层次 edit by cjy 2019/5/5
+    repeated int32 abilityId = 13;
+    //能力层次名称
+    repeated string abilityName = 14;
+    //概念题类 edit by cjy 2019/5/7
+    int32 conceptTypeId = 15;
+    //概念题类名称 edit by cjy 2019/5/7
+    string conceptTypeName = 16;
+    //概念教学目前
+    string conceptTarget = 17;
+    //创建者
+    string creatorId = 18;
+    //客户id
+    int64 customerId = 19;
+    //原客户id
+    int64 originalCustomerId = 20;
+    //年级id
+    int32 gradeId = 21;
+    //教材版本id edit by cjy 2019/5/6
+    int32 editionVersionId = 22;
+    //上下学期 edit by cjy 2019/5/6
+    int32 fascicleId = 23;
+    //章节id
+    repeated int32 chapterId = 24;
+    //章节名称
+    repeated string chapterName = 25;
+    //创建来源
+    int32 createType = 26;
+    //引用题id
+    string refQuestionId = 27;
+    //题干
+    string body = 28;
+    //选项
+    string selection = 29;
+    //答案
+    string answer = 30;
+    //错误类型
+    string errorType = 31;
+    //错误原因
+    string errorAnalysis = 32;
+    //解析
+    string analyse = 33;
+    //解答 //add by cjy 2019/5/7
+    string method = 34;
+    //点评 //add by cjy 2019/5/7
+    string discuss = 35;
+    //来源 //add by cjy 2019/5/7
+    int32 sourceId = 36;
+    //来源 //add by cjy 2019/5/7
+    string sourceName = 37;
+}

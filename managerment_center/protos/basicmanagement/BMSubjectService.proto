@@ -1,0 +1,276 @@
+syntax = "proto3";
+package basicmanagement;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.basicmanagement.proto.basicmanagement";
+option java_outer_classname = "BMSubjectServiceProto";
+// 引入外部的proto对象
+import "Common.proto";
+// 引入外部的proto对象
+import "google/protobuf/any.proto";
+/////////////////////////////////service//////////////////////////////////////
+// 基础管理中心学科管理服务
+service BMSubjectService {
+
+    // 返回学制列表,id传个0吧
+    rpc listSchoolingLength (RequestBMSubjectSchoolingLength) returns (BMSubjectResponseSchoolingLengthList) {}
+
+    //  除id字段,其他字段需全部赋值
+    rpc insertSubject (SubjectP) returns (BMSubjectBaseResponse){}
+
+    rpc deleteSubject (RequestSubjectId) returns (BMSubjectBaseResponse){}
+
+    //  字段需全部赋值
+    rpc updateSubject (SubjectP) returns (BMSubjectBaseResponse){}
+
+    // 查询科目数据,传0表示获取全部
+    rpc listSubject (RequestSubjectList) returns (BMSubjectResponseSubjectList) {}
+
+    //  根据学段查年级列表       学段id,1小学,2初中,3高中,传0则为获取所有年级
+    rpc listGrade (RequestGradeList) returns (BMSubjectResponseGradeList) {}
+
+    // 获取基础配置数据,对应数据库t_basic_management_config表  id  1、学段类型 2、分册类型 3、出版社',传0则为获取所有
+    rpc listConfigData (RequestConfigDataList) returns (BMResponseConfigDataList) {}
+
+    //  获取教材列表
+    rpc listEdition (RequestEditionList) returns (ResponseEditionList) {}
+
+    //  新增教材
+    rpc insertEdition (RequestInsertEdition) returns (BMSubjectBaseResponse) {}
+
+    //  修改教材
+    rpc updateEdition (RequestUpdateEdition) returns (BMSubjectBaseResponse) {}
+
+    //  删除教材
+    rpc deleteEdition (RequestDeleteEdition) returns (BMSubjectBaseResponse) {}
+
+    //  获取某个教材的章节列表
+    rpc listChapter (RequestChapterList) returns (ResponseChapterList) {}
+
+    //  根据typeId和categoryId查某条数据 如根据学段id查询学段名
+    rpc getConfigDataById(RequestConfigDataById) returns (BMResponseConfigData){}
+
+}
+/////////////////////////////////base message//////////////////////////////////////
+//  message里的字段需全部赋值,非整形主键id字段,其他字段都用string
+message SubjectP {
+
+    //    optional int32 result_per_page = 3 [default = 10];  表示可选字段和默认值,但是不能使用
+
+    int32   id = 1 ;
+    string  code = 2;
+    string  subjectName = 3;
+    string  gradeRange = 4;     //  多个以,隔开------格式为   1,2,3,4
+    string  stageId = 5;
+}
+
+//  学科列表对象
+message SubjectVo {
+    int32   id = 1;
+    string  code = 2;
+    string  subjectName = 3;
+    string  gradeRange = 4;     //  多个以,隔开------格式为   1,2,3,4
+    string  stageId = 5;
+    string  relaEdtionNum = 6;   // 关联教材数量
+}
+
+message GradeVo{
+    int32 id = 1;
+    int32 stageId = 2;  // 学段id,1小学,2初中,3高中
+    string gradeName = 3;
+}
+
+message ConfigDataVo{
+    int32   typeId = 1;         //  类型id
+    string  typeName = 2;       //  类型名称
+    int32   categoryId = 3;     //  类别id  1、学段类型 2、分册类型 3、出版社'
+    string  categoryName = 4;   //  类别名称
+}
+
+//  教材对象--给列表使用,不包含章节
+message EditionVo {
+
+    int32   id = 1;
+    int32   stageId = 2;        //  学段id
+    int32   gradeId = 3;        //  年级id
+    int32   subjectId = 4;      //  科目id
+    int32   pressId = 5;        //  出版社id
+    int32   fascicleId = 6;     //  分册id
+    string  coverUrl = 7;       //  封面地址
+    string  gradeName = 8;      //  年级名
+    string  fascicleName = 9;   //  分册名
+}
+
+
+//  t_chapter   章节对象
+message ChapterVo {
+    //  此为数据库主键ID,不能重复,用36位UUID,
+    string   id = 1;
+    string   chapterName = 2;       //  章节名称
+    int32    chapterIndex = 3;      //  章节序号
+    int32    editionId = 4;         //  对应的教材id  新增教材时不传
+    string   parentId = 5;          //  父章节id,一级目录推荐传0
+}
+
+///////////////////////////////////request message////////////////////////////////////
+
+//  根据typeId和categoryId查某条数据
+message RequestConfigDataById{
+    int32   typeId = 1;
+    int32   categoryId = 2; //  类别id  1、学段类型 2、分册类型 3、出版社
+}
+
+//  删除教材
+message RequestDeleteEdition{
+    int32   id = 1;
+}
+
+//  修改教材
+message RequestUpdateEdition {
+
+    int32   id = 1;
+    int32   stageId = 2;        //  学段id
+    int32   gradeId = 3;        //  年级id
+    int32   subjectId = 4;      //  科目id
+    int32   pressId = 5;        //  出版社id
+    int32   fascicleId = 6;     //  分册id
+    string  coverUrl = 7;       //  封面地址
+    string  gradeName = 8;      //  年级名
+    string  fascicleName = 9;   //  分册名
+    repeated  ChapterVo datas = 10;   //  章节列表
+}
+
+//  新增教材
+message RequestInsertEdition {
+
+    int32   stageId = 1;        //  学段id
+    int32   gradeId = 2;        //  年级id
+    int32   subjectId = 3;      //  科目id
+    int32   pressId = 4;        //  出版社id
+    int32   fascicleId = 5;     //  分册id
+    string  coverUrl = 6;       //  封面地址
+    string  gradeName = 7;      //  年级名
+    string  fascicleName = 8;   //  分册名
+    repeated  ChapterVo datas = 9;   //  章节列表
+}
+
+message RequestSubjectId {
+    string id = 1;
+}
+
+
+message RequestSubjectList {
+    int32 stageId = 1;
+}
+
+// 学段id,1小学,2初中,3高中,传0则为获取所有年级
+message RequestGradeList {
+    string stageId = 1;
+}
+
+// 获取基础配置数据,对应数据库t_basic_management_config表  id  1、学段类型 2、分册类型 3、出版社',传0则为获取所有
+message RequestConfigDataList {
+    int32 id = 1;
+}
+
+//  获取教材列表数据
+message RequestEditionList {
+    int32 pageNo = 1;       //  页码   从1开始
+    int32 pageSize = 2;     //  每页大小
+    //  下面几个字段传0表示获取所有
+    int32 gradeId = 3;      //  年级
+    int32 pressId = 4;      //  出版社
+    int32 subjectId = 5;    //  科目
+    int32 stageId = 6;      //  学段
+}
+
+// 获取某个教材的章节
+message RequestChapterList {
+    int32    editionId = 1;     //  教材id
+    string   parentId = 2;      //  非必填
+}
+
+
+
+
+///////////////////////////////////response message////////////////////////////////////
+
+//  章节列表
+message ResponseChapterList {
+    string code = 1;    //  操作标识（0成功 1失败）
+    string msg = 2;     //  操作结果
+    repeated ChapterVo datas = 3;
+}
+
+//  获取教材列表
+message ResponseEditionList {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+
+    int64 total = 3;    //  总数量
+    int32 pages = 4;    //  总页数
+    int32 pageNo = 5;   //  页码
+    int32 pageSize = 6; //  每页大小
+    repeated EditionVo datas = 7;
+}
+
+
+message BMResponseConfigData {
+    // 操作标识（0成功 1失败）
+    string code = 1;
+    // 操作结果
+    string msg = 2;
+    int32   typeId = 3;         //  类型id
+    string  typeName = 4;       //  类型名称
+}
+
+
+// 获取基础配置数据,对应数据库t_basic_management_config表  类别id  1、学段类型 2、分册类型 3、出版社',
+message BMResponseConfigDataList {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    repeated ConfigDataVo datas = 3;
+}
+
+//  科目列表数据
+message BMSubjectResponseSubjectList {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    repeated SubjectVo datas = 3;
+}
+
+//  年级列表数据
+message BMSubjectResponseGradeList {
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+    repeated GradeVo datas = 3;
+}
+
+//  年级列表数据
+//message BMSubjectResponseGradeList {
+//    //操作标识（0成功 1失败）
+//    string code = 1;
+//    //操作结果
+//    string msg = 2;
+//    Datas datas = 3;
+//    message Datas {
+//        repeated GradeVo gradeVo = 1;
+//    }
+//}
+
+
+message BMSubjectBaseResponse{
+    //操作标识（0成功 1失败）
+    string code = 1;
+    //操作结果
+    string msg = 2;
+}
+
+

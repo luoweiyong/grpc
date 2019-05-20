@@ -1,0 +1,49 @@
+syntax = "proto3";
+package customercenter;
+option java_multiple_files = true;
+option java_package = "com.szwdcloud.customercenter.proto.customercenter";
+option java_outer_classname = "CustomerAnalysisServiceProto";
+// 引入外部的proto对象
+import "CCCommonMessage.proto";
+/////////////////////////////////response//////////////////////////////////////
+// 客户中心客户分析服务
+service CustomerAnalysisService {
+    //统计客户数(实时统计本月数据)
+    rpc countCustomer(RequestCountCustomer) returns (ReplyMsg){}
+    //根据年份统计每月的客户数
+    rpc countEachMonthCustomer(RequestCountEachMonthCustomer) returns (ReplyMsg){}
+
+}
+
+
+/////////////////////////////////base message//////////////////////////////////////
+//客户数量统计
+message CountCustomerMsg{
+    //客户数量
+    int32 num = 1;
+    //月份
+    int32 month = 2;
+
+}
+
+
+///////////////////////////////////request message////////////////////////////////////
+//统计新增客户数
+message RequestCountCustomer{
+    //统计规则 1 根据月份
+    int32 countRule = 1;
+    //类型   1伟东公司 2学校 3教育集团 4教育局 5 客户(所有客户)
+    int32 type = 2;
+}
+//根据年份统计每月的客户数
+message RequestCountEachMonthCustomer{
+    //年份 例：2019
+    int32 year = 1;
+}
+
+
+///////////////////////////////////response message////////////////////////////////////
+message ResponseCountEachMonthCustomer{
+    //客户数量统计
+    repeated CountCustomerMsg countCustomerMsg = 1;
+}

@@ -1,0 +1,87 @@
+syntax = "proto3";
+package platformserver;
+//option java_multiple_files = true;
+//option java_package = "com.szwdcloud.platformserver.proto.platformserver";
+//option java_outer_classname = "ServerRoleServiceProto";
+import "ServerCommonMessage.proto";
+import public "google/protobuf/timestamp.proto";
+
+service ServerRoleService {
+    //保存角色
+    rpc save(RoleSaveRequest) returns (Response);
+    //更新角色
+    rpc update(RoleUpdateRequest)returns(Response);
+    //删除角色
+    rpc delete(RoleDeleteRequest)returns(Response);
+    //查询角色
+    rpc search(RoleSearchRequest)returns(Response);
+    //关联权限
+    rpc associationPrivilege(AssociationPrivilegeRequest) returns(Response);
+    //解除权限
+    rpc unAssociationPrivilege(UnAssociationPrivilegeRequest)returns(Response);
+    //查询角色类型查询对应的所有的角色
+    rpc findAllRoles(FindAllRolesRequest)returns(Response);
+}
+
+///////////////////////////////request message////////////////////////////////////
+//保存请求
+message RoleSaveRequest{
+   //角色名称 必传
+   string name = 1;
+   //角色类型  必传    平台角色：1,客户角色：2,用户角色：3
+   int32 type = 2;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//更新用户请求
+message RoleUpdateRequest{
+    //必传  角色ID
+    int32 id = 1;
+    string name = 2;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//删除用户请求
+message RoleDeleteRequest{
+    //角色ID 必传
+    string id = 1;
+}
+
+//暂时还没有写
+message RoleSearchRequest{
+    string id = 1;
+    string name = 2;
+    int32 type = 3;
+}
+
+message FindAllRolesRequest{
+    //角色类型 非必须（但是要单纯获得某种类型的角色，需要传） 平台角色：1,客户角色：2,用户角色：3
+    int32 type = 1;
+}
+
+message FindAllRolesResult{
+    message Role{
+        int32 id = 1;
+        string name = 2;
+        int32 type = 3;
+        google.protobuf.Timestamp createTime = 4;
+        google.protobuf.Timestamp updateTime = 5;
+    }
+    repeated Role role = 1;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//角色绑定权限请求
+message AssociationPrivilegeRequest{
+    //权限ID 必传
+    string privilegeId = 1;
+    //角色ID  必传
+    string roleId = 2;
+}
+
+///////////////////////////////request message////////////////////////////////////
+//角色解绑权限请求
+message UnAssociationPrivilegeRequest{
+    //权限角色关联实体ID  必传
+    string id = 1;
+}
