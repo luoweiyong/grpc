@@ -99,6 +99,10 @@ message RequestWorkOrder{
     int32 stageId = 1;
     //科目
     int32 subjectId = 2;
+    // 第几页
+    int32 pageNo = 3;
+    // 每页的结果数
+    int32 pageSize = 4;
 }
 //工单详情信息
 message RequestWorkOrderDetail{
@@ -153,8 +157,16 @@ message ReponseListWorkOrder {
     string code = 1;
     //结果信息
     string msg = 2;
+    //第几页
+    int32 pageNo = 3;
+    //每页数量
+    int32 pageSize = 4;
+    //总页数
+    int32 pages = 5;
+    //总记录数
+    int64 total = 6;
     //工单列表
-    repeated WorkOrderList workOrderLists = 3;
+    repeated WorkOrderList workOrderLists = 7;
 }
 //工单详情列表查询
 message ReponseListWorkOrderDetail {
