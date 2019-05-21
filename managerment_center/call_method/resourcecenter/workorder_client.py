@@ -48,7 +48,7 @@ class Workorder(object):
 
     # 工单新增
     def saveWorkOrder(self, optId, versionNewId, versionOldId, handleStatus, workOrderChapters):
-        response = self.client.saveWorkOrder(RCWorkOrderService_pb2.RequestWorkOrderDetail
+        response = self.client.saveWorkOrder(RCWorkOrderService_pb2.RequestWorkOrderSaveOrUpdate
                                              (optId=optId, versionNewId= versionNewId, versionOldId= versionOldId,
                                               handleStatus= handleStatus, workOrderChapters= workOrderChapters))
         res = MessageToDict(response)
@@ -82,10 +82,10 @@ class Workorder(object):
 
 if __name__ == '__main__':
     W= Workorder()
-    # result = W.listWorkOrder(stageId= 1, subjectId= 101)
-    result = W.listWorkOrderDetail(optId= 1)
-    # result = W.editWorkOrder(optId= 1)
-    # result = W.saveWorkOrder(optId= 1, versionNewId= 2, versionOldId= 3, handleStatus= 4, workOrderChapters= [])
+    # result = W.listWorkOrder(stageId= 1, subjectId= 117)
+    # result = W.listWorkOrderDetail(optId= 1)
+    # result = W.editWorkOrder(optId= 3)
+    result = W.saveWorkOrder(optId= 1, versionNewId= 2, versionOldId= 3, handleStatus= 4, workOrderChapters= [{}])
     # result = W.updateWorkOrder(optId= 1, versionNewId= 2, versionOldId= 3, handleStatus= 4, workOrderChapters= [])
     # result = W.deleteWorkOrder(optId= 1)
     # result = W.mateWorkOrder(versionNewId= 1, versionOldId= 2)

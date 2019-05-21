@@ -8,7 +8,7 @@ import grpc
 import yaml
 import os
 import json
-from protos.resourcecenter import RCQuestionService_pb2, RCQuestionService_pb2_grpc
+from resourcecenter import RCQuestionService_pb2, RCQuestionService_pb2_grpc
 from google.protobuf.json_format import MessageToDict
 
 BASE_DIR= os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
